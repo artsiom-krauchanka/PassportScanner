@@ -1,12 +1,13 @@
 package by.bsuir.misoi.passportscanner.filters;
 
-public class MedianFilter {
+public class MedianFilter implements Filter {
 
     private static final int FILTER_SIZE = 5;
 
     public MedianFilter() {
     }
 
+    @Override
     public int[] transform(int width, int height, int[] pixels) {
         int index = 0;
         int[] argb = new int[FILTER_SIZE * FILTER_SIZE];
