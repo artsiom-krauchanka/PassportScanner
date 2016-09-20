@@ -8,10 +8,10 @@ public class ReduceNoiseFilter implements Filter {
     @Override
     public int[] transform(int width, int height, int[] pixels) {
         int index = 0;
-        int[] r = new int[9];
-        int[] g = new int[9];
-        int[] b = new int[9];
-        int[] outPixels = new int[width * height];
+        final int[] r = new int[9];
+        final int[] g = new int[9];
+        final int[] b = new int[9];
+        final int[] outPixels = new int[width * height];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {

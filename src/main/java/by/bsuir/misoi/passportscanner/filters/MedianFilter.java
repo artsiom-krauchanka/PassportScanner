@@ -2,19 +2,24 @@ package by.bsuir.misoi.passportscanner.filters;
 
 public class MedianFilter implements Filter {
 
-    private static final int FILTER_SIZE = 5;
+    private final int FILTER_SIZE;
+
+    public MedianFilter(int windowSize) {
+        this.FILTER_SIZE = windowSize;
+    }
 
     public MedianFilter() {
+        this.FILTER_SIZE = 3;
     }
 
     @Override
     public int[] transform(int width, int height, int[] pixels) {
         int index = 0;
-        int[] argb = new int[FILTER_SIZE * FILTER_SIZE];
-        int[] r = new int[FILTER_SIZE * FILTER_SIZE];
-        int[] g = new int[FILTER_SIZE * FILTER_SIZE];
-        int[] b = new int[FILTER_SIZE * FILTER_SIZE];
-        int[] outPixels = new int[width * height];
+        final int[] argb = new int[FILTER_SIZE * FILTER_SIZE];
+        final int[] r = new int[FILTER_SIZE * FILTER_SIZE];
+        final int[] g = new int[FILTER_SIZE * FILTER_SIZE];
+        final int[] b = new int[FILTER_SIZE * FILTER_SIZE];
+        final int[] outPixels = new int[width * height+10];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
