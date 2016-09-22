@@ -6,11 +6,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
+import static by.bsuir.misoi.passportscanner.utils.Constants.WINDOW_HEIGHT;
+import static by.bsuir.misoi.passportscanner.utils.Constants.WINDOW_TITLE;
+import static by.bsuir.misoi.passportscanner.utils.Constants.WINDOW_WIDTH;
+
 public class Main extends Application {
 
-    public static final String WINDOW_TITLE = "Passport Scanner";
-    public static final int WINDOW_WIDTH = 800;
-    public static final int WINDOW_HEIGHT = 600;
+    private Stage primaryStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -18,9 +22,28 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
-        primaryStage.setTitle(WINDOW_TITLE);
-        primaryStage.setScene(new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT));
-        primaryStage.show();
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle(WINDOW_TITLE);
+        initRoot();
+    }
+
+    private void initRoot() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/main.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+
+            MainController controller = loader.getController();
+            controller.setMain(this);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 }

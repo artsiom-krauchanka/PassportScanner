@@ -1,17 +1,18 @@
 package by.bsuir.misoi.passportscanner.utils;
 
+import org.apache.commons.io.FilenameUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by Artem on 21-Sep-16.
- */
 public class ImageHelper {
 
+    private static final String JPG_EXTENSION = "jpg";
+
     public static void saveImage(BufferedImage image, String path) throws IOException {
-        ImageIO.write(image, "jpg", new File(path));
+        ImageIO.write(image, JPG_EXTENSION, new File(path));
     }
 
     public static BufferedImage getImageFromPixels(int[] pixels, int width, int height, int imageType) {
@@ -23,15 +24,20 @@ public class ImageHelper {
     public static int[] getPixels(BufferedImage image) {
         final int width = image.getWidth();
         final int height = image.getHeight();
-        final int[] pixels = new int[width*height];
-
+        final int[] pixels = new int[width * height];
         int index = 0;
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 pixels[index++] = image.getRGB(x, y);
             }
         }
-
         return pixels;
+    }
+
+    public static String getTransformedPath(String imagePath) {
+        String path = FilenameUtils.removeExtension(imagePath);
+        String extension = FilenameUtils.getExtension(imagePath);
+        return path + "-TRANSFORMED." + extension;
     }
 }

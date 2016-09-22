@@ -2,8 +2,7 @@ package by.bsuir.misoi.passportscanner.filters;
 
 public class ReduceNoiseFilter implements Filter {
 
-    public ReduceNoiseFilter() {
-    }
+    public ReduceNoiseFilter() {}
 
     @Override
     public int[] transform(int width, int height, int[] pixels) {
@@ -20,10 +19,12 @@ public class ReduceNoiseFilter implements Filter {
                 int ir = (irgb >> 16) & 0xff;
                 int ig = (irgb >> 8) & 0xff;
                 int ib = irgb & 0xff;
+
                 for (int dy = -1; dy <= 1; dy++) {
                     int iy = y+dy;
                     if (0 <= iy && iy < height) {
                         int ioffset = iy*width;
+
                         for (int dx = -1; dx <= 1; dx++) {
                             int ix = x+dx;
                             if (0 <= ix && ix < width) {
@@ -55,24 +56,24 @@ public class ReduceNoiseFilter implements Filter {
     }
 
     private int smooth(int[] v) {
-        int minindex = 0, maxindex = 0, min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        int minIndex = 0, maxIndex = 0, min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
 
         for (int i = 0; i < 9; i++) {
             if ( i != 4 ) {
                 if (v[i] < min) {
                     min = v[i];
-                    minindex = i;
+                    minIndex = i;
                 }
                 if (v[i] > max) {
                     max = v[i];
-                    maxindex = i;
+                    maxIndex = i;
                 }
             }
         }
         if ( v[4] < min )
-            return v[minindex];
+            return v[minIndex];
         if ( v[4] > max )
-            return v[maxindex];
+            return v[maxIndex];
         return v[4];
     }
 }

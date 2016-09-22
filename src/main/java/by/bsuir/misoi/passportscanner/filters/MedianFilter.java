@@ -4,12 +4,12 @@ public class MedianFilter implements Filter {
 
     private final int FILTER_SIZE;
 
-    public MedianFilter(int windowSize) {
-        this.FILTER_SIZE = windowSize;
+    public MedianFilter() {
+        FILTER_SIZE = 3;
     }
 
-    public MedianFilter() {
-        this.FILTER_SIZE = 3;
+    public MedianFilter(int filterSize) {
+        this.FILTER_SIZE = filterSize;
     }
 
     @Override

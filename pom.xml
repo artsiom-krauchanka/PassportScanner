@@ -10,6 +10,9 @@
 
     <properties>
         <slf4j.logger.version>1.7.21</slf4j.logger.version>
+        <junit.version>4.12</junit.version>
+        <google.guava.version>18.0</google.guava.version>
+        <apache.commons.io.version>RELEASE</apache.commons.io.version>
     </properties>
 
     <dependencies>
@@ -17,6 +20,27 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.logger.version}</version>
+        </dependency>
+
+        <!-- JUnit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Google Guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache.commons.io.version}</version>
         </dependency>
     </dependencies>
 
