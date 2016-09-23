@@ -19,7 +19,7 @@ public class MedianFilter implements Filter {
         final int[] r = new int[FILTER_SIZE * FILTER_SIZE];
         final int[] g = new int[FILTER_SIZE * FILTER_SIZE];
         final int[] b = new int[FILTER_SIZE * FILTER_SIZE];
-        final int[] outPixels = new int[width * height+10];
+        final int[] outPixels = new int[width * height + 10];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {

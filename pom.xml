@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <packaging>jar</packaging>
     <groupId>by.bsuir.misoi</groupId>
     <artifactId>passportscanner</artifactId>
     <version>0.0.1</version>
@@ -12,10 +12,11 @@
         <slf4j.logger.version>1.7.21</slf4j.logger.version>
         <junit.version>4.12</junit.version>
         <google.guava.version>18.0</google.guava.version>
-        <apache.commons.io.version>RELEASE</apache.commons.io.version>
+        <apache.commons.io.version>2.5</apache.commons.io.version>
     </properties>
 
     <dependencies>
+        <!--SLF4j logger-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -37,6 +38,7 @@
             <version>${google.guava.version}</version>
         </dependency>
 
+        <!--Apache IO-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

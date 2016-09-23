@@ -1,11 +1,18 @@
 package by.bsuir.misoi.passportscanner.main;
 
+import by.bsuir.misoi.passportscanner.filters.Filter;
+import by.bsuir.misoi.passportscanner.filters.MedianFilter;
+import by.bsuir.misoi.passportscanner.filters.MonochromeFilter;
+import by.bsuir.misoi.passportscanner.filters.ReduceNoiseFilter;
 import by.bsuir.misoi.passportscanner.services.TransformService;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXSpinner;
+import com.jfoenix.controls.JFXToggleButton;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,16 +27,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
-import static by.bsuir.misoi.passportscanner.utils.Constants.FILTERS;
 import static by.bsuir.misoi.passportscanner.utils.Constants.GREEN_COLOR;
 import static by.bsuir.misoi.passportscanner.utils.Constants.RED_COLOR;
 
-public class MainController  implements Initializable {
+public class MainController implements Initializable {
 
-    private Main main;
     private String imagePath;
+    private Main main;
 
     @FXML
     private JFXButton transformButton;
@@ -47,6 +55,12 @@ public class MainController  implements Initializable {
     private JFXDialog dialog;
     @FXML
     private JFXDialogLayout layout;
+    @FXML
+    private JFXToggleButton medianFilter;
+    @FXML
+    private JFXToggleButton monochromeFilter;
+    @FXML
+    private JFXToggleButton noiseFilter;
 
     public void setMain(Main main) {
         this.main = main;
@@ -60,8 +74,10 @@ public class MainController  implements Initializable {
     @FXML
     private void uploadImageHandler() {
         File file = getFile();
-        imagePath = file.getAbsolutePath();
-        sourceImage.setImage(new Image(file.toURI().toString()));
+        if (file != null) {
+            imagePath = file.getAbsolutePath();
+            sourceImage.setImage(new Image(file.toURI().toString()));
+        }
     }
 
     @FXML
@@ -72,7 +88,7 @@ public class MainController  implements Initializable {
         }
 
         BufferedImage image = SwingFXUtils.fromFXImage(sourceImage.getImage(), null);
-        TransformService service = new TransformService(FILTERS, image);
+        TransformService service = new TransformService(getFilters(), image);
         disableButtons();
 
         service.setOnSucceeded(workerStateEvent -> {
@@ -80,9 +96,8 @@ public class MainController  implements Initializable {
             BufferedImage result = service.getValue();
             transformedImage.setImage(SwingFXUtils.toFXImage(result, null));
 
-            String transformedPath = ImageHelper.getTransformedPath(imagePath);
             try {
-                ImageHelper.saveImage(result, transformedPath);
+                ImageHelper.saveImage(result, imagePath);
             } catch (IOException e) {
                 showDialogMessage("Unable to save transformed image!", RED_COLOR);
                 return;
@@ -122,5 +137,21 @@ public class MainController  implements Initializable {
         body.setTextFill(Color.web(color));
         body.setText(message);
         dialog.show(root);
+    }
+
+    private List<Filter> getFilters() {
+        List<Filter> filters = new ArrayList<>();
+
+        if (medianFilter.selectedProperty().getValue()) {
+            filters.add(new MedianFilter());
+        }
+        if (monochromeFilter.selectedProperty().getValue()) {
+            filters.add(new MonochromeFilter());
+        }
+        if (noiseFilter.selectedProperty().getValue()) {
+            filters.add(new ReduceNoiseFilter());
+        }
+        return filters;
+
     }
 }

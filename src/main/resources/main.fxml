@@ -7,61 +7,71 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="602.0" prefWidth="802.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.misoi.passportscanner.main.MainController">
+<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="980.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.bsuir.misoi.passportscanner.main.MainController">
    <content>
-      <StackPane fx:id="root" style="-fx-background-color: white;">
+      <StackPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="978.0" style="-fx-background-color: white;">
          <children>
-            <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white;">
-               <left>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #ECEBED; -fx-background-radius: 15;" BorderPane.alignment="CENTER">
+            <HBox maxHeight="-Infinity">
+               <children>
+                  <AnchorPane prefHeight="498.0" prefWidth="175.0">
                      <children>
-                        <ImageView fx:id="sourceImage" fitHeight="470.0" fitWidth="320.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <VBox layoutX="6.0" layoutY="14.0" prefHeight="208.0" prefWidth="189.0" style="-fx-background-color: #ECEBED; -fx-background-radius: 10;">
+                           <children>
+                              <JFXToggleButton fx:id="monochromeFilter" prefHeight="56.0" prefWidth="213.0" text="Monochrome Filter">
+                                 <font>
+                                    <Font name="Century Gothic" size="12.0" />
+                                 </font>
+                              </JFXToggleButton>
+                              <JFXToggleButton fx:id="medianFilter" prefHeight="56.0" prefWidth="206.0" text="Median Filter">
+                                 <font>
+                                    <Font name="Century Gothic" size="12.0" />
+                                 </font>
+                              </JFXToggleButton>
+                              <JFXToggleButton fx:id="noiseFilter" prefHeight="56.0" prefWidth="239.0" text="Reduse noise Filter">
+                                 <font>
+                                    <Font name="Century Gothic" size="12.0" />
+                                 </font>
+                              </JFXToggleButton>
+                              <JFXButton fx:id="uploadButton" onAction="#uploadImageHandler" prefHeight="31.0" prefWidth="224.0" ripplerFill="#7164ff" text="Upload image">
+                                 <font>
+                                    <Font name="Century Gothic Bold" size="14.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </JFXButton>
+                           </children>
+                        </VBox>
                      </children>
-                     <BorderPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </BorderPane.margin>
                   </AnchorPane>
-               </left>
-               <center>
-                  <AnchorPane maxWidth="-Infinity" prefWidth="100.0" BorderPane.alignment="CENTER">
+                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="480.0" style="-fx-background-color: #ECEBED; -fx-background-radius: 15;">
                      <children>
-                        <JFXSpinner fx:id="spinner" layoutX="23.0" layoutY="230.0" visible="false" AnchorPane.bottomAnchor="220.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="245.0" />
-                        <JFXButton fx:id="transformButton" buttonType="RAISED" layoutX="4.0" layoutY="219.0" onAction="#transformButtonClickHandler" prefWidth="70.0" ripplerFill="#a18e8e" text="transform" AnchorPane.bottomAnchor="255.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="219.0">
+                        <ImageView fx:id="sourceImage" fitHeight="450.0" fitWidth="314.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                     </children>
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </AnchorPane>
+                  <AnchorPane maxWidth="-Infinity" prefHeight="400.0" prefWidth="100.0">
+                     <children>
+                        <JFXSpinner fx:id="spinner" layoutX="16.0" layoutY="250.0" visible="false" />
+                        <JFXButton fx:id="transformButton" buttonType="RAISED" layoutX="-3.0" layoutY="226.0" onAction="#transformButtonClickHandler" prefWidth="70.0" ripplerFill="#7164ff" text="transform">
                            <font>
                               <Font name="Century Gothic Bold" size="12.0" />
                            </font>
                         </JFXButton>
                      </children>
-                     <BorderPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </BorderPane.margin>
                   </AnchorPane>
-               </center>
-               <right>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #ECEBED; -fx-background-radius: 15;" BorderPane.alignment="CENTER">
+                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="480.0" style="-fx-background-color: #ECEBED; -fx-background-radius: 15;">
                      <children>
-                        <ImageView fx:id="transformedImage" fitHeight="470.0" fitWidth="320.0" layoutX="7.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <ImageView fx:id="transformedImage" fitHeight="449.0" fitWidth="304.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
                      </children>
-                     <BorderPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </BorderPane.margin>
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
                   </AnchorPane>
-               </right>
-               <top>
-                  <AnchorPane prefHeight="93.0" prefWidth="800.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <JFXButton fx:id="uploadButton" buttonType="RAISED" layoutX="306.0" layoutY="65.0" onAction="#uploadImageHandler" prefHeight="25.0" prefWidth="178.0" text="Upload target image" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="306.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="65.0">
-                           <font>
-                              <Font name="Century Gothic Bold" size="14.0" />
-                           </font>
-                        </JFXButton>
-                     </children>
-                     <BorderPane.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </BorderPane.margin>
-                  </AnchorPane>
-               </top>
-            </BorderPane>
+               </children>
+            </HBox>
             <JFXDialog fx:id="dialog">
                <children>
                   <JFXDialogLayout fx:id="layout">

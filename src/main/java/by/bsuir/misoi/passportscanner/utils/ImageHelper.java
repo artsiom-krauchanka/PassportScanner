@@ -10,9 +10,12 @@ import java.io.IOException;
 public class ImageHelper {
 
     private static final String JPG_EXTENSION = "jpg";
+    private static final String TRANSFORMED_PATH_SUFFIX = "-TRANSFORMED.";
+
+    private ImageHelper() {}
 
     public static void saveImage(BufferedImage image, String path) throws IOException {
-        ImageIO.write(image, JPG_EXTENSION, new File(path));
+        ImageIO.write(image, JPG_EXTENSION, new File(getTransformedPath(path)));
     }
 
     public static BufferedImage getImageFromPixels(int[] pixels, int width, int height, int imageType) {
@@ -35,9 +38,9 @@ public class ImageHelper {
         return pixels;
     }
 
-    public static String getTransformedPath(String imagePath) {
+   private static String getTransformedPath(String imagePath) {
         String path = FilenameUtils.removeExtension(imagePath);
         String extension = FilenameUtils.getExtension(imagePath);
-        return path + "-TRANSFORMED." + extension;
-    }
+        return path + TRANSFORMED_PATH_SUFFIX + extension;
+   }
 }

@@ -1,6 +1,5 @@
-# PassportScanner
-Image processing, BSUIR project.
-
+**Passport Scanner**
+Image processing, **_BSUIR_** project.
 
 Requirements for input data:
 1) Scanned passport.
