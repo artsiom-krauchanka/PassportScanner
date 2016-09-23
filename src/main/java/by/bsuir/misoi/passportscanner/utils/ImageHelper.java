@@ -10,7 +10,7 @@ import java.io.IOException;
 public class ImageHelper {
 
     private static final String JPG_EXTENSION = "jpg";
-    private static final String TRANSFORMED_PATH_SUFFIX = "-TRANSFORMED.";
+    private static final String TRANSFORMED_PATH_SUFFIX = "-TRANSFORMED";
 
     private ImageHelper() {}
 
@@ -38,9 +38,16 @@ public class ImageHelper {
         return pixels;
     }
 
-   private static String getTransformedPath(String imagePath) {
+
+    private static volatile int counter = 0;
+
+    private static String getTransformedPath(String imagePath) {
         String path = FilenameUtils.removeExtension(imagePath);
         String extension = FilenameUtils.getExtension(imagePath);
-        return path + TRANSFORMED_PATH_SUFFIX + extension;
-   }
+        return path + TRANSFORMED_PATH_SUFFIX + ++counter + "." + extension;
+    }
+
+
+
+
 }
