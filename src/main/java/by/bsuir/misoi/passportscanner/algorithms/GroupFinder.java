@@ -57,7 +57,8 @@ public final class GroupFinder {
         final int black = ColorRGB.getBlackColor();
         final int white = ColorRGB.getWhiteColor();
 
-        int pixel = black;
+        int pixel;
+
         if(x > 0) {         // check left
             pixel = pixels[y * width + x - 1];
             if (pixel != black && pixel != white)
