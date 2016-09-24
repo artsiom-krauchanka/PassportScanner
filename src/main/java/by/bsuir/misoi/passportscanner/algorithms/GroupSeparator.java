@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
  */
 public final class GroupSeparator {
 
-    public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] pixels, final int groupsCount){
+    public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] pixels, final int groupsCount) throws Exception{
         final int groupNumber = getMaxIndex(pixels, groupsCount);
 
         final int width = sourceImage.getWidth();
