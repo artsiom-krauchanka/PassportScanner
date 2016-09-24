@@ -74,7 +74,7 @@ public class ColorRGB {
         return result;
     }
 
-    private static Random random = new Random();
+    private final static Random random = new Random();
     public static ColorRGB getRandomColorRGB(){
         return new ColorRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
     }

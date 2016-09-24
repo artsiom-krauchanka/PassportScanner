@@ -5,9 +5,7 @@ import by.bsuir.misoi.passportscanner.utils.ColorRGB;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by Artem on 23-Sep-16.
- */
+
 public final class GroupFinder {
 
     public static int fastFindGroups(int width, int height, int[] pixels){
