@@ -5,10 +5,31 @@ import by.bsuir.misoi.passportscanner.utils.ColorRGB;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by Artem on 23-Sep-16.
- */
+
 public final class GroupFinder {
+
+    public static int fastFindGroups(int width, int height, int[] pixels){
+        int groupNumber = 1;
+        final int black = ColorRGB.getBlackColor();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if(pixels[y*width + x] == black){
+
+                    int neighborColor = getNeighborColor(x, y, width, height, pixels);
+                    if(neighborColor != -1){
+                        pixels[y * width + x] = neighborColor;
+                    }else {
+                        pixels[y * width + x] = groupNumber++;
+                    }
+                }
+
+
+            }
+        }
+
+        return groupNumber;
+    }
 
     public static int[] findGroups(int width, int height, int[] sourcePixels){
         final int[] pixels = new int[sourcePixels.length];

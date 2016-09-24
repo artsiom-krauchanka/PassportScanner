@@ -15,7 +15,8 @@ public class ImageHelper {
     private ImageHelper() {}
 
     public static void saveImage(BufferedImage image, String path) throws IOException {
-        ImageIO.write(image, JPG_EXTENSION, new File(getTransformedPath(path)));
+        if(image != null)
+            ImageIO.write(image, JPG_EXTENSION, new File(getTransformedPath(path)));
     }
 
     public static BufferedImage getImageFromPixels(int[] pixels, int width, int height, int imageType) {
