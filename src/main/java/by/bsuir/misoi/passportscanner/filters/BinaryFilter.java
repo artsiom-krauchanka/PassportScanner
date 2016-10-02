@@ -2,15 +2,15 @@ package by.bsuir.misoi.passportscanner.filters;
 
 import by.bsuir.misoi.passportscanner.utils.ColorRGB;
 
-public class MonochromeFilter implements Filter {
+public class BinaryFilter implements Filter {
 
     private final int threshold;
 
-    public MonochromeFilter() {
+    public BinaryFilter() {
         this.threshold = 150;
     }
 
-    public MonochromeFilter(int threshold) {
+    public BinaryFilter(int threshold) {
         this.threshold = threshold;
     }
 

@@ -27,6 +27,7 @@ public final class GroupSeparator {
         try {
             img = sourceImage.getSubimage(x, y, width, height);
         }catch (RasterFormatException e){
+            System.out.println("RasterFormatException");
             return null;
         }
         return img;
@@ -62,7 +63,7 @@ public final class GroupSeparator {
         final int white = ColorRGB.getWhiteColor();
 
         for(int i = 0; i < pixels.length; i++)
-            if(pixels[i] != white && pixels[i] > 0)
+            if(pixels[i] != white && pixels[i] > 0 && pixels[i] < groupsCount)
                 counts[pixels[i]]++;
 
         int maxSize = 0;
