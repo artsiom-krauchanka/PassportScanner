@@ -8,8 +8,8 @@ import java.util.LinkedList;
 
 public final class GroupSeparator {
 
-    public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] pixels, final int groupsCount) throws Exception{
-        return getGroup(sourceImage, pixels, getMaxIndex(pixels, groupsCount));
+    public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] groupedPixels, final int groupsCount) throws Exception{
+        return getGroup(sourceImage, groupedPixels, getMaxIndex(groupedPixels, groupsCount));
     }
 
     public static LinkedList<BufferedImage> getAllGroups(final BufferedImage sourceImage, final int[] pixels, final int groupsCount)throws Exception{
