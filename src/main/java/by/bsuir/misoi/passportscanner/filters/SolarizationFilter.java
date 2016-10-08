@@ -3,15 +3,15 @@ package by.bsuir.misoi.passportscanner.filters;
 
 import by.bsuir.misoi.passportscanner.utils.ColorRGB;
 
-public class SolarisationFilter implements Filter{
+public class SolarizationFilter implements Filter{
 
     private final int threshold;
 
-    public SolarisationFilter(){
+    public SolarizationFilter(){
         this.threshold = 127;
     }
 
-    public SolarisationFilter(int threshold){
+    public SolarizationFilter(int threshold){
         this.threshold = threshold;
     }
 
