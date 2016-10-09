@@ -53,6 +53,16 @@ public class ColorRGB {
         return getMixColor(255, 255, 255);
     }
 
+
+    // extract a channel value from a RGB 'int' packed color
+    public static int getChannel(int color, int channel) {
+        return  (color >> (8*channel)) & 0xFF;
+    }
+    // shift a color value of the corresponding channel offset
+    public static int channelShift(int color, int channel) {
+        return (color&0xFF)<<(8*channel);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

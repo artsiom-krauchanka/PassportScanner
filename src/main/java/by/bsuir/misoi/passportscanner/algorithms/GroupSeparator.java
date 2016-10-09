@@ -8,8 +8,8 @@ import java.util.LinkedList;
 
 public final class GroupSeparator {
 
-    public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] pixels, final int groupsCount) throws Exception{
-        return getGroup(sourceImage, pixels, getMaxIndex(pixels, groupsCount));
+    public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] groupedPixels, final int groupsCount) throws Exception{
+        return getGroup(sourceImage, groupedPixels, getMaxIndex(groupedPixels, groupsCount));
     }
 
     public static LinkedList<BufferedImage> getAllGroups(final BufferedImage sourceImage, final int[] pixels, final int groupsCount)throws Exception{
@@ -27,6 +27,7 @@ public final class GroupSeparator {
         try {
             img = sourceImage.getSubimage(x, y, width, height);
         }catch (RasterFormatException e){
+            System.out.println("RasterFormatException");
             return null;
         }
         return img;
@@ -62,7 +63,7 @@ public final class GroupSeparator {
         final int white = ColorRGB.getWhiteColor();
 
         for(int i = 0; i < pixels.length; i++)
-            if(pixels[i] != white && pixels[i] > 0)
+            if(pixels[i] != white && pixels[i] > 0 && pixels[i] < groupsCount)
                 counts[pixels[i]]++;
 
         int maxSize = 0;
