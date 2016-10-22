@@ -1,8 +1,8 @@
 package by.bsuir.misoi.passportscanner.main;
 
+import by.bsuir.misoi.passportscanner.filters.CannyDetectorFilter;
 import by.bsuir.misoi.passportscanner.filters.Filter;
 import by.bsuir.misoi.passportscanner.filters.MedianFilter;
-import by.bsuir.misoi.passportscanner.filters.MonochromeFilter;
 import by.bsuir.misoi.passportscanner.filters.ReduceNoiseFilter;
 import by.bsuir.misoi.passportscanner.services.TransformService;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
@@ -174,11 +174,13 @@ public class MainController implements Initializable {
     private Filter getFilter(String name, String value) {
         switch (name) {
             case "Monochrome":
-                return new MonochromeFilter(Integer.valueOf(value));
+                //return new MonochromeFilter(Integer.valueOf(value));
             case "Median":
                 return new MedianFilter(Integer.valueOf(value));
             case "Reduce Noise":
                 return new ReduceNoiseFilter(Integer.valueOf(value));
+            case "Canny":
+                return new CannyDetectorFilter();
             default:
                 return null;
         }
