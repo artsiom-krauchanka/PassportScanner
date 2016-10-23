@@ -10,7 +10,7 @@ public class Constants {
 
     private Constants() {}
 
-    public static final List<String> FILTERS = ImmutableList.of("Monochrome", "Median", "Reduce Noise", "Canny");
+    public static final List<String> FILTERS = ImmutableList.of("Monochrome", "Median", "Reduce Noise", "Canny", "Otsu");
     public static final int WINDOW_WIDTH = 980;
     public static final int WINDOW_HEIGHT = 500;
     public static final String WINDOW_TITLE = "Passport Scanner";
