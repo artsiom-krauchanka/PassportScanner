@@ -4,6 +4,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.image.RasterFormatException;
 import java.io.File;
 import java.io.IOException;
 
@@ -17,6 +18,17 @@ public class ImageHelper {
     public static void saveImage(BufferedImage image, String path) throws IOException {
         if(image != null)
             ImageIO.write(image, JPG_EXTENSION, new File(getTransformedPath(path)));
+    }
+
+    public static BufferedImage getSubImage(final BufferedImage sourceImage, int x, int y, int width, int height){
+        BufferedImage img;
+        try {
+            img = sourceImage.getSubimage(x, y, width, height);
+        }catch (RasterFormatException e){
+            System.err.printf("RasterFormatException: BufferedImage#getSubimage(%d, %d, %d, %d)\r\n", x, y, width, height);
+            return null;
+        }
+        return img;
     }
 
     public static BufferedImage getImageFromPixels(int[] pixels, int width, int height, int imageType) {

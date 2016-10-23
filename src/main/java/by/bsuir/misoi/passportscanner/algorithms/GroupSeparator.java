@@ -1,6 +1,7 @@
 package by.bsuir.misoi.passportscanner.algorithms;
 
 import by.bsuir.misoi.passportscanner.utils.ColorRGB;
+import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
@@ -22,16 +23,7 @@ public final class GroupSeparator {
         return images;
     }
 
-    private static BufferedImage getSubImage(final BufferedImage sourceImage, int x, int y, int width, int height){
-        BufferedImage img;
-        try {
-            img = sourceImage.getSubimage(x, y, width, height);
-        }catch (RasterFormatException e){
-            System.out.println("RasterFormatException");
-            return null;
-        }
-        return img;
-    }
+
 
     private static BufferedImage getGroup(final BufferedImage sourceImage, final int[] pixels, final int groupNumber){
         final int width = sourceImage.getWidth();
@@ -55,7 +47,7 @@ public final class GroupSeparator {
         int photoHeight = photoWidth / 3 * 4;
         int minY = maxY - photoHeight;
 
-        return getSubImage(sourceImage, minX, minY, photoWidth, photoHeight);
+        return ImageHelper.getSubImage(sourceImage, minX, minY, photoWidth, photoHeight);
     }
 
     private static int getMaxIndex(final int[] pixels, final int groupsCount){
