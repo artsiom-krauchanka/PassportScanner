@@ -12,14 +12,14 @@ public class OtsuFilter implements Filter {
         return new int[0];
     }
 
-        private static BufferedImage original, grayscale, binarized;
+        private static BufferedImage originalImage, grayscale, binarized;
 
         public static void main(String[] args) throws IOException {
 
             File original_f = new File(args[0]+".jpg");
             String output_f = args[0]+"_bin";
-            original = ImageIO.read(original_f);
-            grayscale = toGray(original);
+            originalImage = ImageIO.read(original_f);
+            grayscale = toGray(originalImage);
             binarized = binarize(grayscale);
             writeImage(output_f);
 
@@ -66,7 +66,7 @@ public class OtsuFilter implements Filter {
                     blue = new Color(original.getRGB(i, j)).getBlue();
 
                     red = (int) (0.21 * red + 0.71 * green + 0.07 * blue);
-                    // Return back to original format
+                    // Return back to originalImage format
                     newPixel = colorToRGB(alpha, red, red, red);
 
                     // Write pixels into image
