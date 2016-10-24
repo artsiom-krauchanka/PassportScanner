@@ -13,8 +13,8 @@ import java.awt.image.BufferedImage;
 
 public class HoughLine {
 
-    protected double theta;
-    protected double r;
+    public double theta;
+    public double r;
 
     /**
      * Initialises the hough line
