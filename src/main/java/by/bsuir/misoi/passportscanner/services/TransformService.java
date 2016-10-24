@@ -22,7 +22,6 @@ public class TransformService extends Service<BufferedImage> {
     protected Task<BufferedImage> createTask() {
 
         return new Task<BufferedImage>() {
-
             @Override
             protected BufferedImage call() {
                 int[] pixels = ImageHelper.getPixels(image);

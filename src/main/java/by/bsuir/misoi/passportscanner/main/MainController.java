@@ -1,6 +1,10 @@
 package by.bsuir.misoi.passportscanner.main;
 
-import by.bsuir.misoi.passportscanner.filters.*;
+import by.bsuir.misoi.passportscanner.filters.BinaryFilter;
+import by.bsuir.misoi.passportscanner.filters.CannyDetectorFilter;
+import by.bsuir.misoi.passportscanner.filters.Filter;
+import by.bsuir.misoi.passportscanner.filters.MedianFilter;
+import by.bsuir.misoi.passportscanner.filters.ReduceNoiseFilter;
 import by.bsuir.misoi.passportscanner.services.TransformService;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 import com.jfoenix.controls.JFXButton;
@@ -178,8 +182,8 @@ public class MainController implements Initializable {
                 return new ReduceNoiseFilter(Integer.valueOf(value));
             case "Canny":
                 return new CannyDetectorFilter();
-            case "Otsu":
-                return new OtsuFilter();
+            case "Binary":
+                return new BinaryFilter();
             default:
                 return null;
         }
@@ -216,7 +220,7 @@ public class MainController implements Initializable {
     }
 
     private void showDialogMessage(String message, String color) {
-        Label body  = (Label) layout.getBody().get(0);
+        Label body = (Label) layout.getBody().get(0);
         body.setTextFill(Color.web(color));
         body.setText(message);
         dialog.show(root);

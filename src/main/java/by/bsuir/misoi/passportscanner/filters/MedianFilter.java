@@ -25,16 +25,15 @@ public class MedianFilter implements Filter {
             for (int x = 0; x < width; x++) {
                 int k = 0;
 
-                for (int dy = -FILTER_SIZE/2; dy <= FILTER_SIZE/2; dy++) {
-                    int iy = y+dy;
-
+                for (int dy = -FILTER_SIZE / 2; dy <= FILTER_SIZE / 2; dy++) {
+                    int iy = y + dy;
                     if (0 <= iy && iy < height) {
-                        int ioffset = iy*width;
+                        int ioffset = iy * width;
 
-                        for (int dx = -FILTER_SIZE/2; dx <= FILTER_SIZE/2; dx++) {
-                            int ix = x+dx;
+                        for (int dx = -FILTER_SIZE / 2; dx <= FILTER_SIZE / 2; dx++) {
+                            int ix = x + dx;
                             if (0 <= ix && ix < width) {
-                                int rgb = pixels[ioffset+ix];
+                                int rgb = pixels[ioffset + ix];
                                 argb[k] = rgb;
                                 r[k] = (rgb >> 16) & 0xff;
                                 g[k] = (rgb >> 8) & 0xff;
@@ -61,9 +60,9 @@ public class MedianFilter implements Filter {
         for (int i = 0; i < FILTER_SIZE * FILTER_SIZE; i++) {
             sum = 0;
             for (int j = 0; j < FILTER_SIZE * FILTER_SIZE; j++) {
-                sum += Math.abs(r[i]-r[j]);
-                sum += Math.abs(g[i]-g[j]);
-                sum += Math.abs(b[i]-b[j]);
+                sum += Math.abs(r[i] - r[j]);
+                sum += Math.abs(g[i] - g[j]);
+                sum += Math.abs(b[i] - b[j]);
             }
             if (sum < min) {
                 min = sum;

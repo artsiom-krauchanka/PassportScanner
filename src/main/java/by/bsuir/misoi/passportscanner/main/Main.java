@@ -44,7 +44,7 @@ public class Main extends Application {
             controller.setMain(this);
 
         } catch (IOException ex) {
-            LOG.error("Exception has occured while initializing main stage. See details: ",ex);
+            LOG.error("Exception has occurred while initializing main stage. See details: ", ex);
         }
     }
 

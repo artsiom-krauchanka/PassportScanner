@@ -10,21 +10,24 @@ import java.io.IOException;
 
 public class ImageHelper {
 
+    private static final String DOT = ".";
     private static final String JPG_EXTENSION = "jpg";
     private static final String TRANSFORMED_PATH_SUFFIX = "-TRANSFORMED";
+    private static volatile int counter = 0;
 
-    private ImageHelper() {}
+    private ImageHelper() {
+    }
 
     public static void saveImage(BufferedImage image, String path) throws IOException {
-        if(image != null)
+        if (image != null)
             ImageIO.write(image, JPG_EXTENSION, new File(getTransformedPath(path)));
     }
 
-    public static BufferedImage getSubImage(final BufferedImage sourceImage, int x, int y, int width, int height){
+    public static BufferedImage getSubImage(final BufferedImage sourceImage, int x, int y, int width, int height) {
         BufferedImage img;
         try {
             img = sourceImage.getSubimage(x, y, width, height);
-        }catch (RasterFormatException e){
+        } catch (RasterFormatException e) {
             System.err.printf("RasterFormatException: BufferedImage#getSubimage(%d, %d, %d, %d)\r\n", x, y, width, height);
             return null;
         }
@@ -51,16 +54,9 @@ public class ImageHelper {
         return pixels;
     }
 
-
-    private static volatile int counter = 0;
-
     private static String getTransformedPath(String imagePath) {
         String path = FilenameUtils.removeExtension(imagePath);
         String extension = FilenameUtils.getExtension(imagePath);
-        return path + TRANSFORMED_PATH_SUFFIX + ++counter + "." + extension;
+        return path + TRANSFORMED_PATH_SUFFIX + ++counter + DOT + extension;
     }
-
-
-
-
 }

@@ -8,8 +8,7 @@ import java.util.Vector;
 
 public class HoughLineAnalyzer {
 
-
-    public static BufferedImage getPassportFromList(BufferedImage src, Vector<HoughLine> lines){
+    public static BufferedImage getPassportFromList(BufferedImage src, Vector<HoughLine> lines) {
         int xMin = src.getWidth();
         int yMin = src.getHeight();
         int xMax = 0;
@@ -20,7 +19,7 @@ public class HoughLineAnalyzer {
         float centerX = width / 2;
         float centerY = height / 2;
 
-        for (HoughLine line : lines){
+        for (HoughLine line : lines) {
             double tsin = Math.sin(line.theta);
             double tcos = Math.cos(line.theta);
             // During processing h_h is doubled so that -ve r values
@@ -31,9 +30,9 @@ public class HoughLineAnalyzer {
                 for (int y = 0; y < height; y++) {
                     int x = (int) ((((line.r - houghHeight) - ((y - centerY) * tsin)) / tcos) + centerX);
                     if (x < width && x >= 0) {
-                        if(x > xMax)
+                        if (x > xMax)
                             xMax = y;
-                        else if(x < xMin)
+                        else if (x < xMin)
                             xMin = x;
                     }
                 }
@@ -42,18 +41,15 @@ public class HoughLineAnalyzer {
                 for (int x = 0; x < width; x++) {
                     int y = (int) ((((line.r - houghHeight) - ((x - centerX) * tcos)) / tsin) + centerY);
                     if (y < height && y >= 0) {
-                        if(y > yMax)
+                        if (y > yMax)
                             yMax = y;
-                        else if(y < yMin)
+                        else if (y < yMin)
                             yMin = y;
                     }
                 }
             }
 
         }
-
-
         return ImageHelper.getSubImage(src, xMin, yMin, xMax - xMin, yMax - yMin);
     }
-
 }

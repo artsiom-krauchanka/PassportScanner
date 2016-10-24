@@ -10,7 +10,7 @@ public class CannyDetectorFilter implements Filter {
     private final static float MAGNITUDE_LIMIT = 1000F;
     private final static int MAGNITUDE_MAX = (int) (MAGNITUDE_SCALE * MAGNITUDE_LIMIT);
 
-    private int picsize;
+    private int picSize;
     private int width;
     private int height;
     private int[] data;
@@ -39,7 +39,7 @@ public class CannyDetectorFilter implements Filter {
     public int[] transform(int width, int height, int[] pixels) {
         this.width = width;
         this.height = height;
-        picsize = width * height;
+        picSize = width * height;
         initArrays();
         readLuminance(pixels);
 
@@ -64,7 +64,7 @@ public class CannyDetectorFilter implements Filter {
         int j = 0;
         for (int i = 0; i < histogram.length; i++) {
             sum += histogram[i];
-            int target = sum * 255 / picsize;
+            int target = sum * 255 / picSize;
             for (int k = j + 1; k <= target; k++) {
                 remap[k] = i;
             }
@@ -77,7 +77,6 @@ public class CannyDetectorFilter implements Filter {
     }
 
     private void computeGradients(float kernelRadius, int kernelWidth) {
-
         float kernel[] = new float[kernelWidth];
         float diffKernel[] = new float[kernelWidth];
         int kwidth;
@@ -95,7 +94,6 @@ public class CannyDetectorFilter implements Filter {
         int initY = width * (kwidth - 1);
         int maxY = width * (height - (kwidth - 1));
 
-        //perform convolution in x and y directions
         for (int x = initX; x < maxX; x++) {
             for (int y = initY; y < maxY; y += width) {
                 int index = x + y;
@@ -120,9 +118,9 @@ public class CannyDetectorFilter implements Filter {
             for (int y = initY; y < maxY; y += width) {
                 float sum = 0f;
                 int index = x + y;
-                for (int i = 1; i < kwidth; i++)
+                for (int i = 1; i < kwidth; i++) {
                     sum += diffKernel[i] * (yConv[index - i] - yConv[index + i]);
-
+                }
                 xGradient[index] = sum;
             }
 
@@ -137,7 +135,6 @@ public class CannyDetectorFilter implements Filter {
                     sum += diffKernel[i] * (xConv[index - yOffset] - xConv[index + yOffset]);
                     yOffset += width;
                 }
-
                 yGradient[index] = sum;
             }
 
@@ -214,9 +211,6 @@ public class CannyDetectorFilter implements Filter {
                         && tmp > Math.abs(xGrad * nwMag + (yGrad - xGrad) * nMag) /*(4)*/
                         ) {
                     magnitude[index] = gradMag >= MAGNITUDE_LIMIT ? MAGNITUDE_MAX : (int) (MAGNITUDE_SCALE * gradMag);
-                    //NOTE: The orientation of the edge is not employed by this
-                    //implementation. It is a simple matter to compute it at
-                    //this point as: Math.atan2(yGrad, xGrad);
                 } else {
                     magnitude[index] = 0;
                 }
@@ -225,14 +219,14 @@ public class CannyDetectorFilter implements Filter {
     }
 
     private void initArrays() {
-        if (data == null || picsize != data.length) {
-            data = new int[picsize];
-            magnitude = new int[picsize];
+        if (data == null || picSize != data.length) {
+            data = new int[picSize];
+            magnitude = new int[picSize];
 
-            xConv = new float[picsize];
-            yConv = new float[picsize];
-            xGradient = new float[picsize];
-            yGradient = new float[picsize];
+            xConv = new float[picSize];
+            yConv = new float[picSize];
+            xGradient = new float[picSize];
+            yGradient = new float[picSize];
         }
     }
 
@@ -278,13 +272,13 @@ public class CannyDetectorFilter implements Filter {
     }
 
     private void thresholdEdges() {
-        for (int i = 0; i < picsize; i++) {
+        for (int i = 0; i < picSize; i++) {
             data[i] = data[i] > 0 ? -1 : 0xff000000;
         }
     }
 
     private void readLuminance(int[] pixels) {
-        for (int i = 0; i < picsize; i++) {
+        for (int i = 0; i < picSize; i++) {
             int p = pixels[i];
             int r = (p & 0xff0000) >> 16;
             int g = (p & 0xff00) >> 8;

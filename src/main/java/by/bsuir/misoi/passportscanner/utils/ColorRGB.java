@@ -2,13 +2,12 @@ package by.bsuir.misoi.passportscanner.utils;
 
 import java.util.Random;
 
-
 public class ColorRGB {
 
+    private static final Random RANDOM = new Random();
     private int red;
     private int green;
     private int blue;
-
 
     public ColorRGB(int red, int green, int blue) {
         this.red = red;
@@ -16,33 +15,20 @@ public class ColorRGB {
         this.blue = blue;
     }
 
-    public int getMixColor(){
-        return red<<16|green<<8|blue;
-
-    }
-    public int getRed() {
-        return red;
-    }
-
-    public void setRed(int red) {
-        this.red = red;
-    }
-
     public static int getRed(int color) {
-        return (color & 0x00ff0000)  >> 16;
+        return (color & 0x00ff0000) >> 16;
     }
 
     public static int getGreen(int color) {
-        return	(color & 0x0000ff00)  >> 8;
+        return (color & 0x0000ff00) >> 8;
     }
 
     public static int getBlue(int color) {
-        return  color & 0x000000ff;
-
+        return color & 0x000000ff;
     }
 
     public static int getMixColor(int red, int green, int blue) {
-        return red<<16|green<<8|blue;
+        return red << 16 | green << 8 | blue;
     }
 
     public static int getBlackColor() {
@@ -53,14 +39,30 @@ public class ColorRGB {
         return getMixColor(255, 255, 255);
     }
 
-
     // extract a channel value from a RGB 'int' packed color
     public static int getChannel(int color, int channel) {
-        return  (color >> (8*channel)) & 0xFF;
+        return (color >> (8 * channel)) & 0xFF;
     }
+
     // shift a color value of the corresponding channel offset
     public static int channelShift(int color, int channel) {
-        return (color&0xFF)<<(8*channel);
+        return (color & 0xFF) << (8 * channel);
+    }
+
+    public static ColorRGB getRandomColorRGB() {
+        return new ColorRGB(RANDOM.nextInt(255), RANDOM.nextInt(255), RANDOM.nextInt(255));
+    }
+
+    public int getMixColor() {
+        return red << 16 | green << 8 | blue;
+    }
+
+    public int getRed() {
+        return red;
+    }
+
+    public void setRed(int red) {
+        this.red = red;
     }
 
     @Override
@@ -82,11 +84,6 @@ public class ColorRGB {
         result = 31 * result + green;
         result = 31 * result + blue;
         return result;
-    }
-
-    private final static Random random = new Random();
-    public static ColorRGB getRandomColorRGB(){
-        return new ColorRGB(random.nextInt(255), random.nextInt(255), random.nextInt(255));
     }
 
 }
