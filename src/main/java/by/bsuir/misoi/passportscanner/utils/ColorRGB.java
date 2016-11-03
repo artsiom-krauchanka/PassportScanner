@@ -27,8 +27,23 @@ public class ColorRGB {
         return color & 0x000000ff;
     }
 
+    public static int getLuminance(int pixel){
+        int red = (pixel & 0xff0000) >> 16;
+        int green = (pixel & 0xff00) >> 8;
+        int blue = pixel & 0xff;
+        return Math.round(0.299f * red + 0.587f * green + 0.114f * blue);
+    }
+
     public static int getMixColor(int red, int green, int blue) {
         return red << 16 | green << 8 | blue;
+    }
+
+    public static int getGray(int pixel){
+        int red = (pixel & 0xff0000) >> 16;
+        int green = (pixel & 0xff00) >> 8;
+        int blue = pixel & 0xff;
+        int gray = (int)(0.2126 * red + 0.7152 * green + 0.0722 * blue);
+        return getMixColor(gray, gray, gray);
     }
 
     public static int getBlackColor() {

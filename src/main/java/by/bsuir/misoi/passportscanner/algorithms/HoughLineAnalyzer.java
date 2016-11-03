@@ -4,9 +4,27 @@ package by.bsuir.misoi.passportscanner.algorithms;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Vector;
 
 public class HoughLineAnalyzer {
+
+
+    public static double getAngle(final Vector<HoughLine> houghLines, double deltaAngel){
+        final HoughLine[] lines = houghLines.toArray(new HoughLine[houghLines.size()]);
+        for (int i = 0; i < lines.length - 1; i++){
+            for (int j = i + 1; j < lines.length; j++) {
+                double degree1 = Math.toDegrees(lines[i].theta);
+                double degree2 = Math.toDegrees(lines[j].theta);
+                double delta = Math.abs(degree1 - degree2);
+                if (delta <  90 + deltaAngel && delta > 90 - deltaAngel)
+                    return lines[i].theta;
+            }
+        }
+        return 0.0;
+    }
+
+
 
     public static BufferedImage getPassportFromList(BufferedImage src, Vector<HoughLine> lines) {
         int xMin = src.getWidth();
@@ -52,4 +70,7 @@ public class HoughLineAnalyzer {
         }
         return ImageHelper.getSubImage(src, xMin, yMin, xMax - xMin, yMax - yMin);
     }
+
+
+
 }

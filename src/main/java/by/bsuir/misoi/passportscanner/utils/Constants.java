@@ -8,6 +8,9 @@ import java.util.List;
 
 public class Constants {
 
+    public static final int HOUGH_LOCAL_MAXIMUM = 250;
+    public static final int PERPENDICULAR_INFELICITY = 5;
+
     public static final List<String> FILTERS = ImmutableList.of("Monochrome", "Median", "Reduce Noise", "Canny", "Binary");
     public static final int WINDOW_WIDTH = 980;
     public static final int WINDOW_HEIGHT = 500;
