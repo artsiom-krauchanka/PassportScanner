@@ -1,23 +1,39 @@
 package by.bsuir.misoi.passportscanner.filters;
 
+import by.bsuir.misoi.passportscanner.utils.ColorRGB;
+
 public class BinaryFilter implements Filter {
 
-    private int width;
-    private int height;
-
-    public BinaryFilter() {
-    }
 
     @Override
-    public int[] transform(int width, int height, int[] pixels) {
-        this.width = width;
-        this.height = height;
-        int[] grayScale = toGray(pixels);
-        return binarize(grayScale);
+    public int[] transform(int width, int height, final int[] pixels) {
+        int[] grayScale = toGray(width, height, pixels);
+
+        int threshold = otsuTreshold(width, height, grayScale);
+
+        int[] binarized = new int[width * height];
+
+        for (int i = 0; i < width * height; i++) {
+            int newPixel = ColorRGB.getBlue(grayScale[i]) > threshold ? 255 : 0;
+            binarized[i] = ColorRGB.getMixColor(newPixel, newPixel, newPixel);
+        }
+
+        return binarized;
     }
 
-    private int otsuTreshold(int[] original) {
-        int[] histogram = imageHistogram(original);
+    private int[] toGray(int width, int height, final int[] pixels) {
+        int[] gray = new int[width * height];
+
+        for (int i = 0; i < width * height; i++) {
+            gray[i] = ColorRGB.getGray(pixels[i]);
+        }
+
+        return gray;
+    }
+
+
+    private int otsuTreshold(int width, int height, final int[] original) {
+        int[] histogram = imageHistogram(width, height, original);
         int total = width * height;
         float sum = 0;
         for (int i = 0; i < 256; i++) {
@@ -51,71 +67,15 @@ public class BinaryFilter implements Filter {
         }
 
         return threshold;
-
     }
 
-    private int[] toGray(int[] pixels) {
-        int[] lum = new int[width * height];
-
-        for (int i = 0; i < width * height; i++) {
-            int p = pixels[i];
-            int a = (p & 0xff0000) >> 24;
-            int r = (p & 0xff0000) >> 16;
-            int g = (p & 0xff00) >> 8;
-            int b = p & 0xff;
-
-            r = (int) (0.21 * r + 0.71 * g + 0.07 * b);
-            int newPixel = colorToRGB(a, r, r, r);
-            lum[i] = newPixel;
-        }
-        return lum;
-    }
-
-    private int[] binarize(int[] pixels) {
-        int threshold = otsuTreshold(pixels);
-        int[] binarized = new int[width * height];
-
-        for (int i = 0; i < width * height; i++) {
-            int newPixel;
-            int p = pixels[i];
-            int red = (p & 0xff0000) >> 16;
-            int alpha = (p & 0xff0000) >> 24;
-
-            if (red > threshold) {
-                newPixel = 255;
-            } else {
-                newPixel = 0;
-            }
-            newPixel = colorToRGB(alpha, newPixel, newPixel, newPixel);
-            binarized[i] = newPixel;
-        }
-        return binarized;
-    }
-
-    private int colorToRGB(int alpha, int red, int green, int blue) {
-        int newPixel = 0;
-        newPixel += alpha;
-        newPixel = newPixel << 8;
-        newPixel += red;
-        newPixel = newPixel << 8;
-        newPixel += green;
-        newPixel = newPixel << 8;
-        newPixel += blue;
-        return newPixel;
-    }
-
-    private int[] imageHistogram(int[] pixels) {
+    private int[] imageHistogram(int width, int height, final int[] pixels) {
         int[] histogram = new int[256];
 
-        for (int i = 0; i < histogram.length; i++) {
-            histogram[i] = 0;
+        for (int i = 0; i < width * height; i++) {
+            histogram[ColorRGB.getRed(pixels[i])]++;
         }
 
-        for (int i = 0; i < width * height; i++) {
-            int p = pixels[i];
-            int red = (p & 0xff0000) >> 16;
-            histogram[red]++;
-        }
         return histogram;
     }
 }

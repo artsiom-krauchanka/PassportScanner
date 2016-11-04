@@ -1,6 +1,8 @@
 package by.bsuir.misoi.passportscanner.filters;
 
 
+import by.bsuir.misoi.passportscanner.utils.ColorRGB;
+
 import java.util.Arrays;
 
 public class CannyDetectorFilter implements Filter {
@@ -279,59 +281,7 @@ public class CannyDetectorFilter implements Filter {
 
     private void readLuminance(int[] pixels) {
         for (int i = 0; i < picSize; i++) {
-            int p = pixels[i];
-            int r = (p & 0xff0000) >> 16;
-            int g = (p & 0xff00) >> 8;
-            int b = p & 0xff;
-            data[i] = luminance(r, g, b);
+            data[i] = ColorRGB.getLuminance(pixels[i]);
         }
-    }
-
-    private int luminance(float r, float g, float b) {
-        return Math.round(0.299f * r + 0.587f * g + 0.114f * b);
-    }
-
-    public float getLowThreshold() {
-        return lowThreshold;
-    }
-
-    public void setLowThreshold(float threshold) {
-        if (threshold < 0) throw new IllegalArgumentException();
-        lowThreshold = threshold;
-    }
-
-    public float getHighThreshold() {
-        return highThreshold;
-    }
-
-    public void setHighThreshold(float threshold) {
-        if (threshold < 0) throw new IllegalArgumentException();
-        highThreshold = threshold;
-    }
-
-    public int getGaussianKernelWidth() {
-        return gaussianKernelWidth;
-    }
-
-    public void setGaussianKernelWidth(int gaussianKernelWidth) {
-        if (gaussianKernelWidth < 2) throw new IllegalArgumentException();
-        this.gaussianKernelWidth = gaussianKernelWidth;
-    }
-
-    public float getGaussianKernelRadius() {
-        return gaussianKernelRadius;
-    }
-
-    public void setGaussianKernelRadius(float gaussianKernelRadius) {
-        if (gaussianKernelRadius < 0.1f) throw new IllegalArgumentException();
-        this.gaussianKernelRadius = gaussianKernelRadius;
-    }
-
-    public boolean isContrastNormalized() {
-        return contrastNormalized;
-    }
-
-    public void setContrastNormalized(boolean contrastNormalized) {
-        this.contrastNormalized = contrastNormalized;
     }
 }
