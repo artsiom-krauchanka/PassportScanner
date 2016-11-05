@@ -4,23 +4,23 @@ import by.bsuir.misoi.passportscanner.utils.ColorRGB;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
 
 public final class GroupSeparator {
 
     public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] groupedPixels, final int groupsCount) throws Exception {
-        return getGroup(sourceImage, groupedPixels, getMaxIndex(groupedPixels, groupsCount));
+        final int[] position = getGroup(sourceImage, groupedPixels, getMaxGroup(groupedPixels, groupsCount));
+        return ImageHelper.getSubImage(sourceImage, position[0], position[1], position[2], position[3]);
     }
 
-    public static LinkedList<BufferedImage> getAllGroups(final BufferedImage sourceImage, final int[] pixels, final int groupsCount) throws Exception {
-        final LinkedList<BufferedImage> images = new LinkedList<>();
-        for (int i = 0; i < groupsCount; i++) {
-            images.add(getGroup(sourceImage, pixels, i));
-        }
-        return images;
-    }
+//    public static LinkedList<BufferedImage> getAllGroups(final BufferedImage sourceImage, final int[] pixels, final int groupsCount) throws Exception {
+//        final LinkedList<BufferedImage> images = new LinkedList<>();
+//        for (int i = 0; i < groupsCount; i++) {
+//            images.add(getGroup(sourceImage, pixels, i));
+//        }
+//        return images;
+//    }
 
-    private static BufferedImage getGroup(final BufferedImage sourceImage, final int[] pixels, final int groupNumber) {
+    public static int[] getGroup(final BufferedImage sourceImage, final int[] pixels, final int groupNumber) {
         final int width = sourceImage.getWidth();
         final int height = sourceImage.getHeight();
 
@@ -43,10 +43,10 @@ public final class GroupSeparator {
         int photoWidth = maxX - minX;
         int photoHeight = photoWidth / 3 * 4;
         int minY = maxY - photoHeight;
-        return ImageHelper.getSubImage(sourceImage, minX, minY, photoWidth, photoHeight);
+        return new int[] {minX, minY, photoWidth, photoHeight};
     }
 
-    private static int getMaxIndex(final int[] pixels, final int groupsCount) {
+    public static int getMaxGroup(final int[] pixels, final int groupsCount) {
         int[] counts = new int[groupsCount + 1];
         final int white = ColorRGB.getWhiteColor();
 

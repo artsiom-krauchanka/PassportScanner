@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * increase -xss parameter when you have StackOverFlowError
+ * increase -Xss parameter when you have StackOverFlowError
  */
 public final class GroupFinder {
 

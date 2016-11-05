@@ -72,33 +72,5 @@ public class ColorRGB {
         return red << 16 | green << 8 | blue;
     }
 
-    public int getRed() {
-        return red;
-    }
-
-    public void setRed(int red) {
-        this.red = red;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ColorRGB colorRGB = (ColorRGB) o;
-
-        if (red != colorRGB.red) return false;
-        if (green != colorRGB.green) return false;
-        return blue == colorRGB.blue;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = red;
-        result = 31 * result + green;
-        result = 31 * result + blue;
-        return result;
-    }
 
 }
