@@ -1,5 +1,6 @@
 package by.bsuir.misoi.passportscanner.algorithms;
 
+import by.bsuir.misoi.passportscanner.draw.Content;
 import by.bsuir.misoi.passportscanner.filters.BinaryFilter;
 import by.bsuir.misoi.passportscanner.filters.CannyDetectorFilter;
 import by.bsuir.misoi.passportscanner.filters.Filter;
@@ -89,10 +90,10 @@ public class PassportScanner {
         }
 
         final GroupFinder finder = new GroupFinder(width, height, pixels);
-        int[] photoPosition = GroupSeparator.getGroup(image, pixels, finder.fastFindGroups());
+        Content content = GroupSeparator.getGroup(width, height, pixels, finder.fastFindGroups());
 
-        if(photoPosition.length > 0) {
-            final int y = photoPosition[1];
+        if (content != null) {
+            final int y = content.y;
             if (y < y0) { //top
                 return 1;
             }else if(y > y0){ // bottom
