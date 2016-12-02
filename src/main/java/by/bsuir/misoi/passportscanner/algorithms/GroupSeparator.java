@@ -14,9 +14,38 @@ import java.util.LinkedList;
 
 public final class GroupSeparator {
 
+    private static final double RATIO_CONSTANT = 7d;
+
     public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] groupedPixels, final int groupsCount) throws Exception {
         final Content content = getGroup(sourceImage.getWidth(), sourceImage.getHeight(), groupedPixels, getMaxGroup(groupedPixels, groupsCount));
+
+        double ratio = (double)(sourceImage.getHeight() * sourceImage.getWidth()) / (content.height * content.width);
+        if (ratio < RATIO_CONSTANT) {
+            int middle = sourceImage.getHeight() / 2;
+            if (isHead(content, middle)) {
+                System.out.println("голова");
+            } else {
+                System.out.println("плечи");
+                double realHeight = content.width * 1.34;
+                int realY = (content.y + content.height) - (int) realHeight;
+                content.y = realY;
+                content.height = (int) realHeight;
+            }
+        }
+
         return ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
+    }
+
+    private static boolean isHead(Content content, int middle) {
+        if (middle > content.y + content.height) {
+            return true; // голова
+        } else if (middle < content.y) {
+            return false;  // плечи
+        } else if ((middle - content.y) > (content.y + content.height) - middle) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static LinkedList<Content> getAllGroups(int width, int height, final int[] pixels, final int groupsCount) throws Exception {

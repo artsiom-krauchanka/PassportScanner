@@ -12,6 +12,7 @@ import by.bsuir.misoi.passportscanner.utils.ColorRGB;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 import org.apache.commons.io.FileUtils;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -33,8 +34,8 @@ public class ConsoleExecutor {
 
     final static String fileName = "1.jpg";
 
-    final static String inPath = "E:/img/exa/";
-    final static String outPath = "E:/img/exa/res/";
+    final static String inPath = "C:/img/exa/";
+    final static String outPath = "C:/img/exa/res/";
 
     public static void main(String[] args) throws Throwable {
         for( int i = 1; i <= 3; i++) {
@@ -76,6 +77,15 @@ public class ConsoleExecutor {
             System.out.println(count - removingGroups.size());
 
             LinkedList<Content> contents = GroupSeparator.getAllGroups(width, height, finder.getPixels(), count, removingGroups);
+
+            int middle = sourceImage.getHeight() / 2;
+
+            for (int j = 0; j < sourceImage.getWidth(); j++) {
+                sourceImage.setRGB(j, middle, Color.RED.getRGB());
+            }
+
+            ImageHelper.saveImage(sourceImage, outPath + i + "REEEED.jpg");
+            ImageHelper.saveImage(GroupSeparator.findPhoto(sourceImage, finder.getPixels(), count), outPath + i + "EEEEEEEEEE.jpg");
 
             LinkedList<ContentLine> lines = GroupSeparator.getLines(contents);
             System.out.println(lines.size());
