@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * increase -xss parameter when you have StackOverFlowError
+ * increase -Xss parameter when you have StackOverFlowError
  */
 public final class GroupFinder {
 
@@ -22,6 +22,12 @@ public final class GroupFinder {
         this.width = width;
         this.height = height;
         this.pixels = Arrays.copyOf(sourcePixels, sourcePixels.length);
+
+        final int black = ColorRGB.getBlackColor();
+        final int white = ColorRGB.getWhiteColor();
+        for (int i = 0; i < pixels.length; i++)
+            if (pixels[i] != black)
+                pixels[i] = white;
     }
 
     private void setNeighborColor(int x, int y) {

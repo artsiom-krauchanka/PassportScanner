@@ -181,20 +181,4 @@ public class HoughTransform extends Thread {
         return lines;
     }
 
-    /**
-     * Gets the highest value in the hough array
-     */
-    public int getHighestValue() {
-        int max = 0;
-        for (int t = 0; t < maxTheta; t++) {
-            for (int r = 0; r < doubleHeight; r++) {
-                if (houghArray[t][r] > max) {
-                    max = houghArray[t][r];
-                }
-            }
-        }
-        return max;
-    }
-
-
 }

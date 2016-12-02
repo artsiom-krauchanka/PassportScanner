@@ -4,6 +4,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.io.File;
@@ -92,6 +93,28 @@ public class ImageHelper {
         }
 
         return result;
+    }
+
+    public static BufferedImage rotateCw( BufferedImage img ){
+        int         width  = img.getWidth();
+        int         height = img.getHeight();
+        BufferedImage   newImage = new BufferedImage(height, width, img.getType() );
+
+        for( int i=0 ; i < width ; i++ )
+            for( int j=0 ; j < height ; j++ )
+                newImage.setRGB( height-1-j, i, img.getRGB(i,j) );
+
+        return newImage;
+    }
+
+    public static BufferedImage rotateTo90Degrees(BufferedImage image){
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        Graphics2D g2 = image.createGraphics();
+        g2.rotate(Math.toRadians(90), 0, 0);
+        g2.drawImage(image, null, 0, 0);
+        return image;
     }
 
 }
