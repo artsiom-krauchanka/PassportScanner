@@ -15,9 +15,8 @@ import org.apache.commons.io.FileUtils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.LinkedList;
+import java.util.*;
+import java.util.List;
 
 
 public class ConsoleExecutor {
@@ -34,11 +33,11 @@ public class ConsoleExecutor {
 
     final static String fileName = "1.jpg";
 
-    final static String inPath = "C:/img/exa/";
-    final static String outPath = "C:/img/exa/res/";
+    final static String inPath = "D:/img/exa/";
+    final static String outPath = "D:/img/exa/res/";
 
     public static void main(String[] args) throws Throwable {
-        for( int i = 1; i <= 3; i++) {
+        for( int i = 1; i <= 4; i++) {
             File folder = new File(outPath + i + "/");
             if (folder.exists())
                 FileUtils.deleteDirectory(folder);
@@ -72,11 +71,19 @@ public class ConsoleExecutor {
             final Hashtable<Integer, Integer> stats = GroupSeparator.getGroupStatistics(finder.getPixels(), count);
             final ArrayList<Integer> removingGroups = GroupSeparator.deleteSmallGroups(finder.getPixels(), SMALL_GROUP_LIMIT, stats);
 
-            removingGroups.add(GroupSeparator.getMaxGroup(finder.getPixels(), count));
+            final LinkedList<Content> contents = GroupSeparator.getAllGroups(width, height, finder.getPixels(), count, removingGroups);
+            final Content photoContent = GroupSeparator.getPhotoContent(width, height, finder.getPixels(), count);
+            final List<Content> photoSegments = GroupSeparator.exclude(photoContent, contents);
+
+            for (Content c : photoSegments) {
+                if (contents.contains(c))
+                    contents.remove(c);
+            }
+//            removingGroups.add(GroupSeparator.getMaxGroup(finder.getPixels(), count));
 
             System.out.println(count - removingGroups.size());
 
-            LinkedList<Content> contents = GroupSeparator.getAllGroups(width, height, finder.getPixels(), count, removingGroups);
+
 
             int middle = sourceImage.getHeight() / 2;
 

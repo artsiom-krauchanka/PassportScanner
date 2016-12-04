@@ -6,6 +6,7 @@ import by.bsuir.misoi.passportscanner.draw.Pixel;
 import by.bsuir.misoi.passportscanner.utils.ColorRGB;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -14,18 +15,27 @@ import java.util.LinkedList;
 
 public final class GroupSeparator {
 
-    private static final double RATIO_CONSTANT = 7d;
+    private static final double RATIO_CONSTANT = 6.8d;
 
-    public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] groupedPixels, final int groupsCount) throws Exception {
-        final Content content = getGroup(sourceImage.getWidth(), sourceImage.getHeight(), groupedPixels, getMaxGroup(groupedPixels, groupsCount));
+    public static Content getPhotoContent(int width, int height, final int[] groupedPixels, final int groupsCount) {
+        final Content content = getGroup(width, height, groupedPixels, getMaxGroup(groupedPixels, groupsCount));
 
-        double ratio = (double)(sourceImage.getHeight() * sourceImage.getWidth()) / (content.height * content.width);
-        if (ratio < RATIO_CONSTANT) {
-            int middle = sourceImage.getHeight() / 2;
+        int middle = height / 2;
+        double ratio = (double) (height * width) / (content.height * content.width);
+        if (ratio < 6.8d || ratio > 8.2d) {
             if (isHead(content, middle)) {
-                System.out.println("голова");
+                double ratio1;
+                do {
+                    content.width += 2;
+                    content.x -= 1;
+                    double realHeight = content.width * 1.34;
+                    ratio1 = (double) (height * width) / (realHeight * content.width);
+                } while ((ratio1 < RATIO_CONSTANT || ratio1 > 8.2));
+
+                double realHeight = content.width * 1.34;
+                content.height = (int) realHeight;
+
             } else {
-                System.out.println("плечи");
                 double realHeight = content.width * 1.34;
                 int realY = (content.y + content.height) - (int) realHeight;
                 content.y = realY;
@@ -33,7 +43,38 @@ public final class GroupSeparator {
             }
         }
 
+        return content;
+    }
+
+
+    public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] groupedPixels, final int groupsCount) throws Exception {
+//        final Content content = getGroup(sourceImage.getWidth(), sourceImage.getHeight(), groupedPixels, getMaxGroup(groupedPixels, groupsCount));
+        final Content content = getPhotoContent(sourceImage.getWidth(), sourceImage.getHeight(), groupedPixels, groupsCount);
         return ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
+    }
+
+    public static LinkedList<Content> exclude(Content element, LinkedList<Content> elements) {
+        final Line2D topElement = new Line2D.Float(element.x, element.y, element.x + element.width, element.y);
+        final Line2D leftElement = new Line2D.Float(element.x, element.y, element.x, element.y + element.height);
+        final Line2D bottomElement = new Line2D.Float(element.x, element.y + element.height, element.x + element.width, element.y);
+        final Line2D rightElement = new Line2D.Float(element.x + element.width, element.y + element.height, element.x + element.width, element.y + element.height);
+
+        final LinkedList<Content> temp = new LinkedList<>();
+        for (Content content : elements) {
+            if (content != null) {
+                final Line2D top = new Line2D.Float(content.x, content.y, content.x + content.width, content.y);
+                final Line2D left = new Line2D.Float(content.x, content.y, content.x, content.y + content.height);
+                final Line2D bottom = new Line2D.Float(content.x, content.y + content.height, content.x + content.width, content.y);
+                final Line2D right = new Line2D.Float(content.x + content.width, content.y + content.height, content.x + content.width, content.y + content.height);
+                if (topElement.intersectsLine(left) || topElement.intersectsLine(right) ||
+                        bottomElement.intersectsLine(left) || bottomElement.intersectsLine(right) ||
+                        leftElement.intersectsLine(top) || leftElement.intersectsLine(bottom) ||
+                        rightElement.intersectsLine(top) || rightElement.intersectsLine(bottom)) {
+                    temp.add(content);
+                }
+            }
+        }
+        return temp;
     }
 
     private static boolean isHead(Content content, int middle) {
@@ -109,7 +150,7 @@ public final class GroupSeparator {
         final Hashtable<Integer, Integer> stats = new Hashtable<>(groupsCount);
 
         for (int i = 1; i <= groupsCount; i++) {
-            int size =0;
+            int size = 0;
             for (int j = 0; j < pixels.length; j++)
                 if (pixels[j] == i)
                     size++;
