@@ -15,16 +15,9 @@ Requirements for Passport Scanner:
 3) Perceptron implementation.
 4) Face recognition.
 5) Out data: 
-		*photo;(?)
-		*passport type;
-		*code of issuing state;
+		*photo;
 		*passport number;
 		*surname/name;
-		*nationality;
 		*date of birth;
 		*ID;
-		*sex;
-		*place of birth;
-		*date of issue;
-		*date of expiry;
-		*authority.
+		
