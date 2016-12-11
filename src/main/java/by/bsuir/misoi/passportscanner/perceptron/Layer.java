@@ -44,6 +44,15 @@ public class Layer {
         InputLayer = new Input[InputNum];
         HiddenLayer = new Hidden[HiddenNum];
         OutputLayer = new Output[OutputNum];
+
+        for (int i  = 0; i < PreInputNum; i++)
+            PreInputLayer[i] = new PreInput();
+        for (int i  = 0; i < InputNum; i++)
+            InputLayer[i] = new Input();
+        for (int i  = 0; i < HiddenNum; i++)
+            HiddenLayer[i] = new Hidden();
+        for (int i  = 0; i < OutputNum; i++)
+            OutputLayer[i] = new Output();
     }
 
 
@@ -265,10 +274,11 @@ public class Layer {
                 max = OutputLayer[i].output;
                 MatchedHigh = OutputLayer[i].Value;
                 OutputValueHight = max;
-                System.out.println("Max :" + MatchedHigh);
-                System.out.println("Min :" + MatchedLow + "\n");
+
             }
         }
+        System.out.println("Max :" + MatchedHigh);
+        System.out.println("Min :" + MatchedLow + "\n");
     }
 
 }
