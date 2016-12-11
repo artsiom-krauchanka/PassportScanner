@@ -36,7 +36,7 @@ public class ConsoleExecutor {
 
     public static void main(String[] args) throws Throwable {
         Perceptron perceptron = new Perceptron();
-        for( int i = 1; i <= 3; i++) {
+        for( int i = 1; i <= 1; i++) {
             File folder = new File(outPath + i + "/");
             if (folder.exists())
                 FileUtils.deleteDirectory(folder);
@@ -73,6 +73,7 @@ public class ConsoleExecutor {
 
                     ImageHelper.saveImage(result, lineFolder.getPath() + "/" + i + ".bmp");
                 }
+                System.out.println("---------------------------------------");
             }
 
 

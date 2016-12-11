@@ -26,6 +26,9 @@ public class Perceptron {
     private int av_ImageWidth = 0;
     private int NumOfPatterns = 0;
 
+    private int InputNum = 47;
+    private int HiddenNum = 15;
+
     private final static File traningDir = new File("E:/img/x/");
 
 
@@ -59,6 +62,8 @@ public class Perceptron {
 
             int networkInput = av_ImageHeight * av_ImageWidth;
 
+            InputNum = ((int)((double)(networkInput + NumOfPatterns) * .33));
+            HiddenNum = ((int)((double)(networkInput + NumOfPatterns) * .11));
         }
         catch (Exception ex)
         {
@@ -74,7 +79,7 @@ public class Perceptron {
         {
             BufferedImage Temp = ImageHelper.readImage(f);
 
-            TrainingSet.put(FilenameUtils.getName(f.getPath()),
+            TrainingSet.put(FilenameUtils.removeExtension(FilenameUtils.getName(f.getPath())),
                     ImageProcessing.ToMatrix(Temp, av_ImageHeight, av_ImageWidth));
         }
 
@@ -84,14 +89,12 @@ public class Perceptron {
         if (TrainingSet == null)
             throw new Exception("Unable to Create Neural Network As There is No Data to Train..");
 
-        int InputNum = 47;
-        int HiddenNum = 15;
 
         neuralNetwork = new NeuralNetwork
                     (new Layer(av_ImageHeight * av_ImageWidth, InputNum, HiddenNum, NumOfPatterns), TrainingSet);
 
 
-        neuralNetwork.setMaximumError(0.08);
+        neuralNetwork.setMaximumError(0.02);
         neuralNetwork.Train();
     }
 

@@ -10,7 +10,7 @@ import java.util.Objects;
 public class NeuralNetwork {
     private Layer NeuralNet;
     private double maximumError = 1.0;
-    private int maximumIteration = 10000;
+    private int maximumIteration = 1000000;
     Dictionary<String, double[]> TrainingSet;
 
     public double getMaximumError() {
@@ -29,7 +29,6 @@ public class NeuralNetwork {
         this.maximumIteration = maximumIteration;
     }
 
-//    public  abstract void IterationChangedCallBack(Object o, NeuralEventArgs args);
 
     public NeuralNetwork(Layer IBackPro, Dictionary<String, double[]> trainingSet)
     {
