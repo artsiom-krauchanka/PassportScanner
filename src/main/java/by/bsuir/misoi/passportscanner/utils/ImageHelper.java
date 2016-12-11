@@ -1,5 +1,6 @@
 package by.bsuir.misoi.passportscanner.utils;
 
+import by.bsuir.misoi.passportscanner.draw.Content;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.imageio.ImageIO;
@@ -25,8 +26,13 @@ public class ImageHelper {
     }
 
     public static void saveImage(BufferedImage image, String path) throws IOException {
-        if (image != null)
+        if (image != null && path != null)
             ImageIO.write(image, JPG_EXTENSION, new File(getTransformedPath(path)));
+    }
+
+    public static void saveImage(BufferedImage image, Content content, String path) throws IOException {
+        if (image != null && path != null)
+            ImageIO.write(image.getSubimage(content.x, content.y, content.width, content.height), JPG_EXTENSION, new File(getTransformedPath(path)));
     }
 
     public static BufferedImage getSubImage(final BufferedImage sourceImage, int x, int y, int width, int height) {

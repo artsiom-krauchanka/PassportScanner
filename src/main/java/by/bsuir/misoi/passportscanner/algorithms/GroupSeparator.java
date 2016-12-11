@@ -8,16 +8,13 @@ import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public final class GroupSeparator {
 
     private static final double RATIO_CONSTANT = 6.8d;
 
-    public static Content getPhotoContent(int width, int height, final int[] groupedPixels, final int groupsCount) {
+    public static Content getPhotoContent(int width, int height, final int[] groupedPixels, int groupsCount) throws Exception {
         final Content content = getGroup(width, height, groupedPixels, getMaxGroup(groupedPixels, groupsCount));
 
         int middle = height / 2;
@@ -37,44 +34,65 @@ public final class GroupSeparator {
 
             } else {
                 double realHeight = content.width * 1.34;
-                int realY = (content.y + content.height) - (int) realHeight;
-                content.y = realY;
+                content.y = (content.y + content.height) - (int) realHeight;
                 content.height = (int) realHeight;
             }
         }
 
-        return content;
+        final List<Content> contents = getAllGroups(width, height, groupedPixels, groupsCount);
+        final List<Content> photoSegments = GroupSeparator.exclude(content, contents);
+
+        return GroupSeparator.analyzeContents(photoSegments);
     }
 
 
     public static BufferedImage findPhoto(final BufferedImage sourceImage, final int[] groupedPixels, final int groupsCount) throws Exception {
-//        final Content content = getGroup(sourceImage.getWidth(), sourceImage.getHeight(), groupedPixels, getMaxGroup(groupedPixels, groupsCount));
         final Content content = getPhotoContent(sourceImage.getWidth(), sourceImage.getHeight(), groupedPixels, groupsCount);
         return ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
     }
 
-    public static LinkedList<Content> exclude(Content element, LinkedList<Content> elements) {
-        final Line2D topElement = new Line2D.Float(element.x, element.y, element.x + element.width, element.y);
-        final Line2D leftElement = new Line2D.Float(element.x, element.y, element.x, element.y + element.height);
-        final Line2D bottomElement = new Line2D.Float(element.x, element.y + element.height, element.x + element.width, element.y);
-        final Line2D rightElement = new Line2D.Float(element.x + element.width, element.y + element.height, element.x + element.width, element.y + element.height);
-
+    public static List<Content> exclude (Content element, List<Content> elements) {
         final LinkedList<Content> temp = new LinkedList<>();
+
         for (Content content : elements) {
             if (content != null) {
-                final Line2D top = new Line2D.Float(content.x, content.y, content.x + content.width, content.y);
-                final Line2D left = new Line2D.Float(content.x, content.y, content.x, content.y + content.height);
-                final Line2D bottom = new Line2D.Float(content.x, content.y + content.height, content.x + content.width, content.y);
-                final Line2D right = new Line2D.Float(content.x + content.width, content.y + content.height, content.x + content.width, content.y + content.height);
-                if (topElement.intersectsLine(left) || topElement.intersectsLine(right) ||
-                        bottomElement.intersectsLine(left) || bottomElement.intersectsLine(right) ||
-                        leftElement.intersectsLine(top) || leftElement.intersectsLine(bottom) ||
-                        rightElement.intersectsLine(top) || rightElement.intersectsLine(bottom)) {
+                if (element.x < content.x + content.width &&
+                        element.x + element.width > content.x &&
+                        element.y < content.y + content.height &&
+                        element.y + element.height > content.y)
                     temp.add(content);
-                }
             }
         }
+
         return temp;
+    }
+
+    /**
+     * @return edge of input contents
+     */
+    public static Content analyzeContents(List<Content> contents) {
+        int minX = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxY = Integer.MIN_VALUE;
+
+        for (Content c : contents) {
+
+            if (minX > c.x)
+                minX = c.x;
+
+            if (minY > c.y)
+                minY = c.y;
+
+            if (maxX < c.x + c.width)
+                maxX = c.x + c.width;
+
+            if (maxY < c.y + c.height)
+                maxY = c.y + c.height;
+
+        }
+
+        return new Content(minX, minY, maxX - minX, maxY - minY);
     }
 
     private static boolean isHead(Content content, int middle) {
@@ -89,25 +107,29 @@ public final class GroupSeparator {
         }
     }
 
-    public static LinkedList<Content> getAllGroups(int width, int height, final int[] pixels, final int groupsCount) throws Exception {
-        final LinkedList<Content> images = new LinkedList<>();
-        for (int i = 0; i < groupsCount; i++) {
+    public static List<Content> getAllGroups(int width, int height, final int[] pixels, final int groupsCount) throws Exception {
+        final List<Content> images = new LinkedList<>();
+
+        for (int i = 0; i < groupsCount; i++)
             images.add(getGroup(width, height, pixels, i));
-        }
+
+
         return images;
     }
 
-    public static LinkedList<Content> getAllGroups(int width, int height, final int[] pixels, final int groupsCount, final ArrayList<Integer> removingGroups) throws Exception {
-        final LinkedList<Content> images = new LinkedList<>();
-        for (int i = 0; i < groupsCount; i++) {
+    public static List<Content> getAllGroups(int width, int height, final int[] pixels, final int groupsCount, final List<Integer> removingGroups) throws Exception {
+        final List<Content> images = new LinkedList<>();
+
+        for (int i = 0; i < groupsCount; i++)
             if (!removingGroups.contains(i))
                 images.add(getGroup(width, height, pixels, i));
-        }
+
+
         return images;
     }
 
-    public static LinkedList<ContentLine> getLines(LinkedList<Content> contents) {
-        final LinkedList<ContentLine> lines = new LinkedList<>();
+    public static List<ContentLine> getLines(List<Content> contents) {
+        final List<ContentLine> lines = new LinkedList<>();
 
         for (Content content : contents) {
             if (content != null) {
@@ -129,8 +151,8 @@ public final class GroupSeparator {
         return lines;
     }
 
-    public static ArrayList<Integer> deleteSmallGroups(final int[] pixels, int minGroupSize, final Hashtable<Integer, Integer> stats) {
-        final ArrayList<Integer> removingKeys = new ArrayList<>(stats.size());
+    public static List<Integer> deleteSmallGroups(final int[] pixels, int minGroupSize, final Map<Integer, Integer> stats) {
+        final List<Integer> removingKeys = new ArrayList<>(stats.size());
 
         final Iterator<Integer> iterator = stats.keySet().iterator();
         while (iterator.hasNext()) {
@@ -146,8 +168,8 @@ public final class GroupSeparator {
         return removingKeys;
     }
 
-    public static Hashtable<Integer, Integer> getGroupStatistics(final int[] pixels, int groupsCount) {
-        final Hashtable<Integer, Integer> stats = new Hashtable<>(groupsCount);
+    public static Map<Integer, Integer> getGroupStatistics(final int[] pixels, int groupsCount) {
+        final Map<Integer, Integer> stats = new Hashtable<>(groupsCount);
 
         for (int i = 1; i <= groupsCount; i++) {
             int size = 0;
@@ -209,6 +231,9 @@ public final class GroupSeparator {
                 index = i;
             }
         }
+
         return index;
     }
+
+
 }

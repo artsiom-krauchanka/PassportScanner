@@ -28,9 +28,7 @@ public class PassportScanner {
     }
 
 
-    final static String outPath = "E:/img/res/";
-
-    public static BufferedImage extractPassportFromImage(BufferedImage sourceImage){
+    public static BufferedImage extractPassportFromImage(BufferedImage sourceImage) throws Exception {
         final int width = sourceImage.getWidth();
         final int height = sourceImage.getHeight();
 
@@ -64,20 +62,14 @@ public class PassportScanner {
             image = ImageHelper.rotateCw(image);
 
 
-        if(getPhotoSection(image) == 2)
+        if(getPhotoSection(image).equals(ContentPosition.TOP))
             image = ImageHelper.rotate(image, Math.toRadians(180));
 
         return image;
     }
 
 
-    /**
-     *  @return :
-     *  1 - top
-     *  2 - bottom
-     *  -1 - if not found
-     */
-    public static int getPhotoSection(BufferedImage image) {
+    public static ContentPosition getPhotoSection(BufferedImage image) throws Exception {
         final int width = image.getWidth();
         final int height = image.getHeight();
 
@@ -85,22 +77,25 @@ public class PassportScanner {
 
         int[] pixels = ImageHelper.getPixels(image);
 
-        for (Filter filter : filters) {
+        for (Filter filter : filters)
             pixels = filter.transform(width, height, pixels);
-        }
+
 
         final GroupFinder finder = new GroupFinder(width, height, pixels);
-        Content content = GroupSeparator.getGroup(width, height, pixels, finder.fastFindGroups());
+        int count = finder.fastFindGroups();
+        Content content = GroupSeparator.getPhotoContent(width, height, finder.getPixels(), count);
 
         if (content != null) {
-            final int y = content.y;
-            if (y < y0) { //top
-                return 1;
-            }else if(y > y0){ // bottom
-                return 2;
-            }else
-                return -1;
-        }else return -1;
+            if (content.y < y0)  //top
+                return ContentPosition.TOP;
+            else if (content.y > y0)  // bottom
+                return ContentPosition.BOTTOM;
+        }
+
+        return ContentPosition.NOT_FOUND;
     }
 
+    public enum ContentPosition {
+        TOP, BOTTOM, NOT_FOUND
+    }
 }
