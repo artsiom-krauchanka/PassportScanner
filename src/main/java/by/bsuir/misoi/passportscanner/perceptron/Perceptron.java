@@ -1,6 +1,7 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
 
+import by.bsuir.misoi.passportscanner.filters.Filter;
 import by.bsuir.misoi.passportscanner.perceptron.struct.NeuralEventArgs;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 import org.apache.commons.io.FilenameUtils;
@@ -30,14 +31,14 @@ public class Perceptron {
 
     public Perceptron() throws Exception
     {
-        String[] names = traningDir.list();
-        InitializeSettings(names);
+        File[] files = traningDir.listFiles();
+        InitializeSettings(files);
 
-        GenerateTrainingSet(names);
+        GenerateTrainingSet(files);
         CreateNeuralNetwork();
     }
 
-    private void InitializeSettings (String[] files)
+    private void InitializeSettings (File[] files)
     {
 
         try
@@ -47,9 +48,9 @@ public class Perceptron {
             av_ImageHeight = 0;
             av_ImageWidth = 0;
 
-            for (String s : files)
+            for (File f : files)
             {
-                BufferedImage Temp = ImageHelper.readImage(s);
+                BufferedImage Temp = ImageHelper.readImage(f);
                 av_ImageHeight += Temp.getHeight();
                 av_ImageWidth += Temp.getWidth();
             }
@@ -65,15 +66,15 @@ public class Perceptron {
         }
     }
 
-    private void GenerateTrainingSet(String[] Patterns) throws IOException {
+    private void GenerateTrainingSet(File[] Patterns) throws IOException {
 
         TrainingSet = new Hashtable<>(Patterns.length);
 
-        for (String s : Patterns)
+        for (File f : Patterns)
         {
-            BufferedImage Temp = ImageHelper.readImage(s);
+            BufferedImage Temp = ImageHelper.readImage(f);
 
-            TrainingSet.put(FilenameUtils.getName(s),
+            TrainingSet.put(FilenameUtils.getName(f.getPath()),
                     ImageProcessing.ToMatrix(Temp, av_ImageHeight, av_ImageWidth));
         }
 
@@ -95,7 +96,7 @@ public class Perceptron {
     }
 
 
-    private void recognize(BufferedImage image)
+    public void recognize(BufferedImage image)
     {
         String MatchedHigh = "?", MatchedLow = "?";
         double OutputValueHight = 0, OutputValueLow = 0;

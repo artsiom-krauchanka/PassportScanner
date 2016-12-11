@@ -265,6 +265,8 @@ public class Layer {
                 max = OutputLayer[i].output;
                 MatchedHigh = OutputLayer[i].Value;
                 OutputValueHight = max;
+                System.out.println("Max :" + MatchedHigh);
+                System.out.println("Min :" + MatchedLow + "\n");
             }
         }
     }

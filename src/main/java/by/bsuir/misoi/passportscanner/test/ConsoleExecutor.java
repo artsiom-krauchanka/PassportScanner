@@ -7,6 +7,7 @@ import by.bsuir.misoi.passportscanner.draw.ContentLine;
 import by.bsuir.misoi.passportscanner.filters.BinaryFilter;
 import by.bsuir.misoi.passportscanner.filters.Filter;
 import by.bsuir.misoi.passportscanner.filters.MedianFilter;
+import by.bsuir.misoi.passportscanner.perceptron.Perceptron;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
 import org.apache.commons.io.FileUtils;
@@ -34,7 +35,7 @@ public class ConsoleExecutor {
     final static String outPath = "E:/img/exa/res/";
 
     public static void main(String[] args) throws Throwable {
-
+        Perceptron perceptron = new Perceptron();
         for( int i = 1; i <= 3; i++) {
             File folder = new File(outPath + i + "/");
             if (folder.exists())
@@ -68,6 +69,7 @@ public class ConsoleExecutor {
                 for (Content content : info.getLines().get(j).getLine()) {
                     BufferedImage result = ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
 
+                    perceptron.recognize(result);
 
                     ImageHelper.saveImage(result, lineFolder.getPath() + "/" + i + ".bmp");
                 }

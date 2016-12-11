@@ -25,6 +25,10 @@ public class ImageHelper {
         return path != null ? ImageIO.read(new File(path)) : null;
     }
 
+    public static BufferedImage readImage(File file) throws IOException {
+        return file != null ? ImageIO.read(file) : null;
+    }
+
     public static void saveImage(BufferedImage image, String path) throws IOException {
         if (image != null && path != null)
             ImageIO.write(image, JPG_EXTENSION, new File(getTransformedPath(path)));
