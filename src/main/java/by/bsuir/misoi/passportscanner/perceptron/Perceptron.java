@@ -91,9 +91,21 @@ public class Perceptron {
 
 
         neuralNetwork.setMaximumError(0.08);
+        neuralNetwork.Train();
     }
 
 
+    private void recognize(BufferedImage image)
+    {
+        String MatchedHigh = "?", MatchedLow = "?";
+        double OutputValueHight = 0, OutputValueLow = 0;
 
+        double[] input = ImageProcessing.ToMatrix(image,
+                av_ImageHeight, av_ImageWidth);
+
+        neuralNetwork.Recognize(input, MatchedHigh, OutputValueHight,
+                MatchedLow, OutputValueLow);
+
+    }
 
 }
