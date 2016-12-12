@@ -1,18 +1,17 @@
 package by.bsuir.misoi.passportscanner.test;
 
-import by.bsuir.misoi.passportscanner.algorithms.GroupFinder;
-import by.bsuir.misoi.passportscanner.algorithms.GroupSeparator;
+import by.bsuir.misoi.passportscanner.algorithms.ContentAnalyzer;
+import by.bsuir.misoi.passportscanner.algorithms.PassportInfo;
 import by.bsuir.misoi.passportscanner.draw.Content;
 import by.bsuir.misoi.passportscanner.draw.ContentLine;
-import by.bsuir.misoi.passportscanner.draw.Rectangle;
 import by.bsuir.misoi.passportscanner.filters.BinaryFilter;
 import by.bsuir.misoi.passportscanner.filters.Filter;
 import by.bsuir.misoi.passportscanner.filters.MedianFilter;
-import by.bsuir.misoi.passportscanner.utils.ColorRGB;
+import by.bsuir.misoi.passportscanner.perceptron.Perceptron;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
+
 import org.apache.commons.io.FileUtils;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
@@ -21,7 +20,6 @@ import java.util.List;
 
 public class ConsoleExecutor {
 
-    public static final int SMALL_GROUP_LIMIT = 30;
 
 
     final static LinkedList<Filter> filters = new LinkedList<>();
@@ -33,11 +31,12 @@ public class ConsoleExecutor {
 
     final static String fileName = "1.jpg";
 
-    final static String inPath = "D:/img/exa/";
-    final static String outPath = "D:/img/exa/res/";
+    final static String inPath = "E:/img/exa/";
+    final static String outPath = "E:/img/exa/res/";
 
     public static void main(String[] args) throws Throwable {
-        for( int i = 1; i <= 4; i++) {
+        Perceptron perceptron = new Perceptron();
+        for( int i = 1; i <= 1; i++) {
             File folder = new File(outPath + i + "/");
             if (folder.exists())
                 FileUtils.deleteDirectory(folder);
@@ -56,70 +55,46 @@ public class ConsoleExecutor {
             for (Filter filter : filters) {
                 pixels = filter.transform(width, height, pixels); //применяем 2 фильтра
             }
-            ImageHelper.saveImage(ImageHelper.getImageFromPixels(pixels, width, height, BufferedImage.TYPE_BYTE_BINARY), outPath + i + ".jpg");
 
-            final GroupFinder demoFinder = new GroupFinder(width, height, pixels);
-            int[] demoPixels = demoFinder.findGroups();
-            ImageHelper.saveImage(ImageHelper.getImageFromPixels(demoPixels, width, height, BufferedImage.TYPE_INT_RGB), outPath + i + ".jpg");
+            sourceImage = ImageHelper.getImageFromPixels(pixels, width, height, BufferedImage.TYPE_BYTE_BINARY);
+            ImageHelper.saveImage(sourceImage, outPath + i + ".jpg");
 
+            final List<ContentLine> lines = ContentAnalyzer.getContentLines(width, height, pixels);
 
-            final GroupFinder finder = new GroupFinder(width, height, pixels);
-
-            int count = finder.fastFindGroups(); //вернет количество найденных групп
-            System.out.println(count);
-
-            final Hashtable<Integer, Integer> stats = GroupSeparator.getGroupStatistics(finder.getPixels(), count);
-            final ArrayList<Integer> removingGroups = GroupSeparator.deleteSmallGroups(finder.getPixels(), SMALL_GROUP_LIMIT, stats);
-
-            final LinkedList<Content> contents = GroupSeparator.getAllGroups(width, height, finder.getPixels(), count, removingGroups);
-            final Content photoContent = GroupSeparator.getPhotoContent(width, height, finder.getPixels(), count);
-            final List<Content> photoSegments = GroupSeparator.exclude(photoContent, contents);
-
-            for (Content c : photoSegments) {
-                if (contents.contains(c))
-                    contents.remove(c);
-            }
-//            removingGroups.add(GroupSeparator.getMaxGroup(finder.getPixels(), count));
-
-            System.out.println(count - removingGroups.size());
-
-
-
-            int middle = sourceImage.getHeight() / 2;
-
-            for (int j = 0; j < sourceImage.getWidth(); j++) {
-                sourceImage.setRGB(j, middle, Color.RED.getRGB());
-            }
-
-            ImageHelper.saveImage(sourceImage, outPath + i + "REEEED.jpg");
-            ImageHelper.saveImage(GroupSeparator.findPhoto(sourceImage, finder.getPixels(), count), outPath + i + "EEEEEEEEEE.jpg");
-
-            LinkedList<ContentLine> lines = GroupSeparator.getLines(contents);
-            System.out.println(lines.size());
-
-            for (int j = 0; j < lines.size(); j++) {
+            PassportInfo info = new PassportInfo(lines);
+            for (int j = 0; j < info.getLines().size(); j++) {
                 File lineFolder = new File(outPath + i + "/" + j + "/");
                 lineFolder.mkdir();
 
-                for (Content content : lines.get(j).getLine()) {
+                for (Content content : info.getLines().get(j).getLine()) {
                     BufferedImage result = ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
-                    ImageHelper.saveImage(result, lineFolder.getPath() + "/" + i + ".jpg");
+
+                    perceptron.recognize(result);
+
+                    ImageHelper.saveImage(result, lineFolder.getPath() + "/" + i + ".bmp");
                 }
+                System.out.println("---------------------------------------");
             }
 
-//            for (int j = 1; j <= count; j++) {
-//                if (!removingGroups.contains(j)) {
-//                    Content content = GroupSeparator.getGroup(width, height, finder.getPixels(), j);
-//                    if (content != null) {
-//                        BufferedImage result = ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
-//                        ImageHelper.saveImage(result, outPath + i + "/" + i + ".jpg");
-//                    }
+
+
+
+//            for (int j = 0; j < lines.size(); j++) {
+//                File lineFolder = new File(outPath + i + "/" + j + "/");
+//                lineFolder.mkdir();
+//
+//                for (Content content : lines.get(j).getLine()) {
+//                    BufferedImage result = ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
+//
+//
+//                    ImageHelper.saveImage(result, lineFolder.getPath() + "/" + i + ".bmp");
 //                }
 //            }
 
 
             System.out.println();
         }
+
     }
 
 
