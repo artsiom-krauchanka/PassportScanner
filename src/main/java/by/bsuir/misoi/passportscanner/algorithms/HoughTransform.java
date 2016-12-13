@@ -1,6 +1,5 @@
 package by.bsuir.misoi.passportscanner.algorithms;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
 

@@ -2,17 +2,15 @@ package by.bsuir.misoi.passportscanner.algorithms;
 
 import by.bsuir.misoi.passportscanner.draw.Content;
 import by.bsuir.misoi.passportscanner.draw.ContentLine;
-import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class ContentAnalyzer {
 
-    public static final int SMALL_GROUP_LIMIT = 30;
-    public static final int SPAM_LINE_CONTENT = 5;
+    private static final int SMALL_GROUP_LIMIT = 30;
+    private static final int SPAM_LINE_CONTENT = 5;
 
     public static List<ContentLine> getContentLines(int width, int height, int[] pixels) throws Exception {
         final GroupFinder finder = new GroupFinder(width, height, pixels);
@@ -28,22 +26,21 @@ public class ContentAnalyzer {
         final List<Content> photoSegments = GroupSeparator.exclude(photoContent, contents);
 
 
-        for (Content c : photoSegments)
-            if (contents.contains(c))
-                contents.remove(c);
-
+        for (Content content : photoSegments) {
+            if (contents.contains(content)) {
+                contents.remove(content);
+            }
+        }
 
         final List<ContentLine> lines = GroupSeparator.getLines(contents);
-
         final List<ContentLine> removingItems = new LinkedList<>();
 
-        for (ContentLine line : lines)
-            if (line.size() < SPAM_LINE_CONTENT)
+        for (ContentLine line : lines) {
+            if (line.size() < SPAM_LINE_CONTENT) {
                 removingItems.add(line);
-
+            }
+        }
         lines.removeAll(removingItems);
-
         return lines;
     }
-
 }

@@ -6,9 +6,13 @@ import by.bsuir.misoi.passportscanner.draw.Pixel;
 import by.bsuir.misoi.passportscanner.utils.ColorRGB;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
-import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public final class GroupSeparator {
 
@@ -51,7 +55,7 @@ public final class GroupSeparator {
         return ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
     }
 
-    public static List<Content> exclude (Content element, List<Content> elements) {
+    public static List<Content> exclude(Content element, List<Content> elements) {
         final LinkedList<Content> temp = new LinkedList<>();
 
         for (Content content : elements) {

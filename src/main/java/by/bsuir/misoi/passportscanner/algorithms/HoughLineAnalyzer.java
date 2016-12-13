@@ -4,7 +4,6 @@ package by.bsuir.misoi.passportscanner.algorithms;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Vector;
 
 public class HoughLineAnalyzer {

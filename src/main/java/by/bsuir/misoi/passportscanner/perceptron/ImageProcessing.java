@@ -1,6 +1,5 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
-
 import by.bsuir.misoi.passportscanner.utils.ColorRGB;
 
 import java.awt.image.BufferedImage;
@@ -8,24 +7,18 @@ import java.awt.image.BufferedImage;
 public class ImageProcessing {
 
     //Convert RGB To Matrix [Of Double]
-    public static double[] ToMatrix(BufferedImage BM, int MatrixRowNumber, int MatrixColumnNumber)
-    {
-        double HRate = ((double) MatrixRowNumber / BM.getHeight());
-        double WRate = ((double)MatrixColumnNumber / BM.getWidth());
-        double[] Result = new double[MatrixColumnNumber * MatrixRowNumber];
+    public static double[] toMatrix(BufferedImage bufferedImage, int matrixRowNumber, int matrixColumnNumber) {
+        double hRate = ((double) matrixRowNumber / bufferedImage.getHeight());
+        double wRate = ((double) matrixColumnNumber / bufferedImage.getWidth());
+        double[] result = new double[matrixColumnNumber * matrixRowNumber];
 
-        for (int r = 0; r < MatrixRowNumber; r++)
-        {
-            for (int c = 0; c < MatrixColumnNumber; c++)
-            {
+        for (int row = 0; row < matrixRowNumber; row++) {
+            for (int col = 0; col < matrixColumnNumber; col++) {
 
-                int color = BM.getRGB((int)(c / WRate), (int)(r / HRate));
-                Result[r * MatrixColumnNumber + c] = 1 - (ColorRGB.getRed(color) * .3 +
-                        ColorRGB.getGreen(color) * .59 +
-                        ColorRGB.getBlue(color) * .11) / 255;
+                int color = bufferedImage.getRGB((int) (col / wRate), (int) (row / hRate));
+                result[row * matrixColumnNumber + col] = 1 - (ColorRGB.getRed(color) * 0.3 + ColorRGB.getGreen(color) * 0.59 + ColorRGB.getBlue(color) * 0.11) / 255;
             }
         }
-        return Result;
+        return result;
     }
-
 }

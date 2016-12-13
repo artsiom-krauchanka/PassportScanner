@@ -1,17 +1,22 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
-
 import by.bsuir.misoi.passportscanner.perceptron.struct.NeuralEventArgs;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.Objects;
 
 public class NeuralNetwork {
-    private Layer NeuralNet;
+
+    private Dictionary<String, double[]> trainingSet;
+    private Layer neuralNet;
     private double maximumError = 1.0;
     private int maximumIteration = 1000000;
-    Dictionary<String, double[]> TrainingSet;
+
+    public NeuralNetwork(Layer iBackPro, Dictionary<String, double[]> trainingSet) {
+        neuralNet = iBackPro;
+        this.trainingSet = trainingSet;
+        neuralNet.initializeNetwork(this.trainingSet);
+    }
 
     public double getMaximumError() {
         return maximumError;
@@ -29,56 +34,38 @@ public class NeuralNetwork {
         this.maximumIteration = maximumIteration;
     }
 
-
-    public NeuralNetwork(Layer IBackPro, Dictionary<String, double[]> trainingSet)
-    {
-        NeuralNet = IBackPro;
-        TrainingSet = trainingSet;
-        NeuralNet.InitializeNetwork(TrainingSet);
-    }
-
-    public boolean Train()
-    {
+    public boolean train() {
         double currentError = 0;
         int currentIteration = 0;
-        NeuralEventArgs Args = new NeuralEventArgs() ;
+        final NeuralEventArgs args = new NeuralEventArgs();
 
-        do
-        {
+        do {
             currentError = 0;
-            Enumeration<String> enumeration = TrainingSet.keys();
-            while (enumeration.hasMoreElements())
-            {
+            Enumeration<String> enumeration = trainingSet.keys();
+            while (enumeration.hasMoreElements()) {
                 String key = enumeration.nextElement();
-                NeuralNet.ForwardPropagate(TrainingSet.get(key), key);
-                NeuralNet.BackPropagate();
-                currentError += NeuralNet.GetError();
+                neuralNet.forwardPropagate(trainingSet.get(key), key);
+                neuralNet.backPropagate();
+                currentError += neuralNet.getError();
             }
 
             currentIteration++;
 
+        } while (currentError > maximumError && currentIteration < maximumIteration && !NeuralEventArgs.STOP);
 
-        } while (currentError > maximumError && currentIteration < maximumIteration && !Args.Stop);
+        return !(currentIteration >= maximumIteration || NeuralEventArgs.STOP);
 
-
-
-        if (currentIteration >= maximumIteration || Args.Stop)
-            return false;//Training Not Successful
-
-        return true;
     }
 
-    public void Recognize(double[] Input, String MatchedHigh, double OutputValueHight,
-                          String MatchedLow, double OutputValueLow)
-    {
-        NeuralNet.Recognize(Input, MatchedHigh, OutputValueHight, MatchedLow, OutputValueLow);
+    public void recognize(double[] input, String matchedHigh, String matchedLow) {
+        neuralNet.recognize(input, matchedHigh, matchedLow);
     }
 
 //    public void SaveNetwork(String path)
 //    {
 //        FileStream FS = new FileStream(path, FileMode.Create);
 //        BinaryFormatter BF = new BinaryFormatter();
-//        BF.Serialize(FS, NeuralNet);
+//        BF.Serialize(FS, neuralNet);
 //        FS.Close();
 //    }
 //
@@ -86,10 +73,7 @@ public class NeuralNetwork {
 //    {
 //        FileStream FS = new FileStream(path, FileMode.Open);
 //        BinaryFormatter BF = new BinaryFormatter();
-//        NeuralNet = (IBackPropagation<T>)BF.Deserialize(FS);
+//        neuralNet = (IBackPropagation<T>)BF.Deserialize(FS);
 //        FS.Close();
 //    }
-
-
-
 }

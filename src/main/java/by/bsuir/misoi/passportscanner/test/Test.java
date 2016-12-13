@@ -3,18 +3,13 @@ package by.bsuir.misoi.passportscanner.test;
 import by.bsuir.misoi.passportscanner.algorithms.HoughLine;
 import by.bsuir.misoi.passportscanner.algorithms.HoughLineAnalyzer;
 import by.bsuir.misoi.passportscanner.algorithms.HoughTransform;
-import by.bsuir.misoi.passportscanner.filters.BinaryFilter;
 import by.bsuir.misoi.passportscanner.filters.CannyDetectorFilter;
 import by.bsuir.misoi.passportscanner.filters.Filter;
-import by.bsuir.misoi.passportscanner.filters.MedianFilter;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.Vector;
 
 /**

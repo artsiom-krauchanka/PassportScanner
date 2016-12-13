@@ -1,8 +1,5 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
-
-import by.bsuir.misoi.passportscanner.filters.Filter;
-import by.bsuir.misoi.passportscanner.perceptron.struct.NeuralEventArgs;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 import org.apache.commons.io.FilenameUtils;
 
@@ -10,106 +7,75 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.Hashtable;
-
-import static java.lang.System.in;
 
 public class Perceptron {
 
-    //Neural Network Object With Output Type String
-    private NeuralNetwork neuralNetwork = null;
-
+    private final static File TRANING_DIR = new File("E:/img/x/");
+    //Neural Network Object With output Type String
+    private NeuralNetwork neuralNetwork;
     //Data Members Required For Neural Network
-    private Dictionary<String, double[]> TrainingSet = null;
-    private int av_ImageHeight = 0;
-    private int av_ImageWidth = 0;
-    private int NumOfPatterns = 0;
+    private Dictionary<String, double[]> trainingSet;
+    private int avImageHeight = 0;
+    private int avImageWidth = 0;
+    private int numOfPatterns = 0;
+    private int inputNum = 47;
+    private int hiddenNum = 15;
 
-    private int InputNum = 47;
-    private int HiddenNum = 15;
-
-    private final static File traningDir = new File("E:/img/x/");
-
-
-    public Perceptron() throws Exception
-    {
-        File[] files = traningDir.listFiles();
-        InitializeSettings(files);
-
-        GenerateTrainingSet(files);
-        CreateNeuralNetwork();
+    public Perceptron() throws Exception {
+        File[] files = TRANING_DIR.listFiles();
+        initializeSettings(files);
+        generateTrainingSet(files);
+        createNeuralNetwork();
     }
 
-    private void InitializeSettings (File[] files)
-    {
+    private void initializeSettings(File[] files) {
 
-        try
-        {
-            NumOfPatterns = files.length;
+        try {
+            numOfPatterns = files.length;
+            avImageHeight = 0;
+            avImageWidth = 0;
 
-            av_ImageHeight = 0;
-            av_ImageWidth = 0;
-
-            for (File f : files)
-            {
-                BufferedImage Temp = ImageHelper.readImage(f);
-                av_ImageHeight += Temp.getHeight();
-                av_ImageWidth += Temp.getWidth();
+            for (File f : files) {
+                BufferedImage temp = ImageHelper.readImage(f);
+                avImageHeight += temp.getHeight();
+                avImageWidth += temp.getWidth();
             }
-            av_ImageHeight /= NumOfPatterns;
-            av_ImageWidth /= NumOfPatterns;
+            avImageHeight /= numOfPatterns;
+            avImageWidth /= numOfPatterns;
 
-            int networkInput = av_ImageHeight * av_ImageWidth;
+            int networkInput = avImageHeight * avImageWidth;
 
-            InputNum = ((int)((double)(networkInput + NumOfPatterns) * .33));
-            HiddenNum = ((int)((double)(networkInput + NumOfPatterns) * .11));
-        }
-        catch (Exception ex)
-        {
-            throw new RuntimeException("Error Initializing Settings: " + ex.getMessage());
+            inputNum = ((int) ((double) (networkInput + numOfPatterns) * 0.33));
+            hiddenNum = ((int) ((double) (networkInput + numOfPatterns) * 0.11));
+
+        } catch (Exception ex) {
+            throw new RuntimeException("error Initializing Settings: " + ex.getMessage());
         }
     }
 
-    private void GenerateTrainingSet(File[] Patterns) throws IOException {
+    private void generateTrainingSet(File[] Patterns) throws IOException {
+        trainingSet = new Hashtable<>(Patterns.length);
 
-        TrainingSet = new Hashtable<>(Patterns.length);
-
-        for (File f : Patterns)
-        {
-            BufferedImage Temp = ImageHelper.readImage(f);
-
-            TrainingSet.put(FilenameUtils.removeExtension(FilenameUtils.getName(f.getPath())),
-                    ImageProcessing.ToMatrix(Temp, av_ImageHeight, av_ImageWidth));
+        for (File f : Patterns) {
+            BufferedImage temp = ImageHelper.readImage(f);
+            trainingSet.put(FilenameUtils.removeExtension(FilenameUtils.getName(f.getPath())), ImageProcessing.toMatrix(temp, avImageHeight, avImageWidth));
         }
-
     }
 
-    private void CreateNeuralNetwork() throws Exception {
-        if (TrainingSet == null)
-            throw new Exception("Unable to Create Neural Network As There is No Data to Train..");
+    private void createNeuralNetwork() throws Exception {
+        if (trainingSet == null) {
+            throw new Exception("Unable to Create Neural Network As There is No Data to train..");
+        }
 
-
-        neuralNetwork = new NeuralNetwork
-                    (new Layer(av_ImageHeight * av_ImageWidth, InputNum, HiddenNum, NumOfPatterns), TrainingSet);
-
-
+        neuralNetwork = new NeuralNetwork(new Layer(avImageHeight * avImageWidth, inputNum, hiddenNum, numOfPatterns), trainingSet);
         neuralNetwork.setMaximumError(0.02);
-        neuralNetwork.Train();
+        neuralNetwork.train();
     }
 
 
-    public void recognize(BufferedImage image)
-    {
-        String MatchedHigh = "?", MatchedLow = "?";
-        double OutputValueHight = 0, OutputValueLow = 0;
-
-        double[] input = ImageProcessing.ToMatrix(image,
-                av_ImageHeight, av_ImageWidth);
-
-        neuralNetwork.Recognize(input, MatchedHigh, OutputValueHight,
-                MatchedLow, OutputValueLow);
-
+    public void recognize(BufferedImage image) {
+        double[] input = ImageProcessing.toMatrix(image, avImageHeight, avImageWidth);
+        neuralNetwork.recognize(input, "?", "?");
     }
-
 }

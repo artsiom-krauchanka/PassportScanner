@@ -9,12 +9,11 @@ import by.bsuir.misoi.passportscanner.filters.Filter;
 import by.bsuir.misoi.passportscanner.filters.MedianFilter;
 import by.bsuir.misoi.passportscanner.perceptron.Perceptron;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
-
 import org.apache.commons.io.FileUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.*;
+import java.util.LinkedList;
 import java.util.List;
 
 

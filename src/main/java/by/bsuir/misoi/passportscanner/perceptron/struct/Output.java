@@ -4,14 +4,55 @@ package by.bsuir.misoi.passportscanner.perceptron.struct;
 import java.io.Serializable;
 
 public class Output implements Serializable, Comparable<String> {
-    public double InputSum;
-    public double output;
-    public double Error;
-    public double Target;
-    public String Value;
+
+    private double inputSum;
+    private double output;
+    private double error;
+    private double target;
+    private String value;
+
+    public double getInputSum() {
+        return inputSum;
+    }
+
+    public void setInputSum(double inputSum) {
+        this.inputSum = inputSum;
+    }
+
+    public double getOutput() {
+        return output;
+    }
+
+    public void setOutput(double output) {
+        this.output = output;
+    }
+
+    public double getError() {
+        return error;
+    }
+
+    public void setError(double error) {
+        this.error = error;
+    }
+
+    public double getTarget() {
+        return target;
+    }
+
+    public void setTarget(double target) {
+        this.target = target;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 
     @Override
     public int compareTo(String o) {
-        return Value.compareTo(o);
+        return value.compareTo(o);
     }
 }

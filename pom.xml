@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <groupId>by.bsuir.misoi</groupId>
     <artifactId>passportscanner</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 
     <properties>
         <slf4j.logger.version>1.7.21</slf4j.logger.version>
@@ -16,7 +16,8 @@
     </properties>
 
     <dependencies>
-                <!--SLF4j logger-->
+
+        <!--SLF4j logger-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -43,11 +44,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${apache.commons.io.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.2</version>
         </dependency>
     </dependencies>
 

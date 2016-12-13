@@ -1,6 +1,5 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
-
 import by.bsuir.misoi.passportscanner.perceptron.struct.Hidden;
 import by.bsuir.misoi.passportscanner.perceptron.struct.Input;
 import by.bsuir.misoi.passportscanner.perceptron.struct.Output;
@@ -12,16 +11,46 @@ import java.util.Random;
 
 public class Layer {
 
+    private int preInputNum;
+    private int inputNum;
+    private int hiddenNum;
+    private int outputNum;
 
-    private int PreInputNum;
-    private int InputNum;
-    private int HiddenNum;
-    private int OutputNum;
+    private PreInput[] preInputLayer;
+    private Input[] inputLayer;
+    private Hidden[] hiddenLayer;
+    private Output[] outputLayer;
+    private double learningRate = 0.2;
 
-    private PreInput[] PreInputLayer;
-    private Input[] InputLayer;
-    private Hidden[] HiddenLayer;
-    private Output[] OutputLayer;
+    public Layer(int preInputNum, int inputNum, int hiddenNum, int outputNum) {
+        this.preInputNum = preInputNum;
+        this.inputNum = inputNum;
+        this.hiddenNum = hiddenNum;
+        this.outputNum = outputNum;
+
+        initLayers();
+    }
+
+    private void initLayers() {
+        preInputLayer = new PreInput[preInputNum];
+        inputLayer = new Input[inputNum];
+        hiddenLayer = new Hidden[hiddenNum];
+        outputLayer = new Output[outputNum];
+
+        for (int i = 0; i < preInputNum; i++) {
+            preInputLayer[i] = new PreInput();
+        }
+        for (int i = 0; i < inputNum; i++) {
+            inputLayer[i] = new Input();
+        }
+        for (int i = 0; i < hiddenNum; i++) {
+            hiddenLayer[i] = new Hidden();
+        }
+        for (int i = 0; i < outputNum; i++) {
+            outputLayer[i] = new Output();
+        }
+    }
+
 
     public double getLearningRate() {
         return learningRate;
@@ -31,254 +60,188 @@ public class Layer {
         this.learningRate = learningRate;
     }
 
-    private double learningRate = 0.2;
-
-    public Layer(int preInputNum, int inputNum, int hiddenNum, int outputNum)
-    {
-        PreInputNum = preInputNum;
-        InputNum = inputNum;
-        HiddenNum = hiddenNum;
-        OutputNum = outputNum;
-
-        PreInputLayer = new PreInput[PreInputNum];
-        InputLayer = new Input[InputNum];
-        HiddenLayer = new Hidden[HiddenNum];
-        OutputLayer = new Output[OutputNum];
-
-        for (int i  = 0; i < PreInputNum; i++)
-            PreInputLayer[i] = new PreInput();
-        for (int i  = 0; i < InputNum; i++)
-            InputLayer[i] = new Input();
-        for (int i  = 0; i < HiddenNum; i++)
-            HiddenLayer[i] = new Hidden();
-        for (int i  = 0; i < OutputNum; i++)
-            OutputLayer[i] = new Output();
-    }
-
-
-    public void BackPropagate()
-    {
+    public void backPropagate() {
         int i, j;
         double total;
 
-        //Fix Hidden Layer's Error
-        for (i = 0; i < HiddenNum; i++)
-        {
+        //Fix Hidden Layer's error
+        for (i = 0; i < hiddenNum; i++) {
             total = 0.0;
-            for (j = 0; j < OutputNum; j++)
-            {
-                total += HiddenLayer[i].Weights[j] * OutputLayer[j].Error;
+            for (j = 0; j < outputNum; j++) {
+                total += hiddenLayer[i].getWeights()[j] * outputLayer[j].getError();
             }
-            HiddenLayer[i].Error = total;
+            hiddenLayer[i].setError(total);
         }
 
-        //Fix Input Layer's Error
-        for (i = 0; i < InputNum; i++)
-        {
+        //Fix Input Layer's error
+        for (i = 0; i < inputNum; i++) {
             total = 0.0;
-            for (j = 0; j < HiddenNum; j++)
-            {
-                total += InputLayer[i].Weights[j] * HiddenLayer[j].Error;
+            for (j = 0; j < hiddenNum; j++) {
+                total += inputLayer[i].weights[j] * hiddenLayer[j].getError();
             }
-            InputLayer[i].Error = total;
+            inputLayer[i].setError(total);
         }
 
-        //Update The First Layer's Weights
-        for (i = 0; i < InputNum; i++)
-        {
-            for (j = 0; j < PreInputNum; j++)
-            {
-                PreInputLayer[j].Weights[i] +=
-                        learningRate * InputLayer[i].Error * PreInputLayer[j].Value;
+        //Update The First Layer's weights
+        for (i = 0; i < inputNum; i++) {
+            for (j = 0; j < preInputNum; j++) {
+                double[] weights = preInputLayer[j].getWeights();
+                weights[i] += learningRate * inputLayer[i].getError() * preInputLayer[j].getValue();
+                preInputLayer[j].setWeights(weights);
             }
         }
 
-        //Update The Second Layer's Weights
-        for (i = 0; i < HiddenNum; i++)
-        {
-            for (j = 0; j < InputNum; j++)
-            {
-                InputLayer[j].Weights[i] +=
-                        learningRate * HiddenLayer[i].Error * InputLayer[j].Output;
+        //Update The Second Layer's weights
+        for (i = 0; i < hiddenNum; i++) {
+            for (j = 0; j < inputNum; j++) {
+                inputLayer[j].weights[i] += learningRate * hiddenLayer[i].getError() * inputLayer[j].output;
             }
         }
 
-        //Update The Third Layer's Weights
-        for (i = 0; i < OutputNum; i++)
-        {
-            for (j = 0; j < HiddenNum; j++)
-            {
-                HiddenLayer[j].Weights[i] +=
-                        learningRate * OutputLayer[i].Error * HiddenLayer[j].Output;
+        //Update The Third Layer's weights
+        for (i = 0; i < outputNum; i++) {
+            for (j = 0; j < hiddenNum; j++) {
+                hiddenLayer[j].getWeights()[i] += learningRate * outputLayer[i].getError() * hiddenLayer[j].getOutput();
             }
         }
     }
 
-    public double F(double x)
-    {
+    public double f(double x) {
         return (1 / (1 + Math.exp(-x)));
     }
 
-    public void ForwardPropagate(double[] pattern, String output)
-    {
+    public void forwardPropagate(double[] pattern, String output) {
         int i, j;
         double total;
 
         //Apply input to the network
-        for (i = 0; i < PreInputNum; i++)
-        {
-            PreInputLayer[i].Value = pattern[i];
+        for (i = 0; i < preInputNum; i++) {
+            preInputLayer[i].setValue(pattern[i]);
         }
 
         //Calculate The First(Input) Layer's Inputs and Outputs
-        for (i = 0; i < InputNum; i++)
-        {
+        for (i = 0; i < inputNum; i++) {
             total = 0.0;
-            for (j = 0; j < PreInputNum; j++)
-            {
-                total += PreInputLayer[j].Value * PreInputLayer[j].Weights[i];
+            for (j = 0; j < preInputNum; j++) {
+                total += preInputLayer[j].getValue() * preInputLayer[j].getWeights()[i];
             }
-            InputLayer[i].InputSum = total;
-            InputLayer[i].Output = F(total);
+            inputLayer[i].inputSum = total;
+            inputLayer[i].output = f(total);
         }
 
         //Calculate The Second(Hidden) Layer's Inputs and Outputs
-        for (i = 0; i < HiddenNum; i++)
-        {
+        for (i = 0; i < hiddenNum; i++) {
             total = 0.0;
-            for (j = 0; j < InputNum; j++)
-            {
-                total += InputLayer[j].Output * InputLayer[j].Weights[i];
+            for (j = 0; j < inputNum; j++) {
+                total += inputLayer[j].output * inputLayer[j].weights[i];
             }
 
-            HiddenLayer[i].InputSum = total;
-            HiddenLayer[i].Output = F(total);
+            hiddenLayer[i].setInputSum(total);
+            hiddenLayer[i].setOutput(f(total));
         }
 
-        //Calculate The Third(Output) Layer's Inputs, Outputs, Targets and Errors
-        for (i = 0; i < OutputNum; i++)
-        {
-            total = 0.0;
-            for (j = 0; j < HiddenNum; j++)
-            {
-                total += HiddenLayer[j].Output * HiddenLayer[j].Weights[i];
+        //Calculate The Third(output) Layer's Inputs, Outputs, Targets and errors
+        for (i = 0; i < outputNum; i++) {
+            total = 0;
+            for (j = 0; j < hiddenNum; j++) {
+                total += hiddenLayer[j].getOutput() * hiddenLayer[j].getWeights()[i];
             }
 
-            OutputLayer[i].InputSum = total;
-            OutputLayer[i].output = F(total);
-            OutputLayer[i].Target = OutputLayer[i].Value.compareTo(output) == 0 ? 1.0 : 0.0;
-            OutputLayer[i].Error = (OutputLayer[i].Target - OutputLayer[i].output) * (OutputLayer[i].output) * (1 - OutputLayer[i].output);
+            outputLayer[i].setInputSum(total);
+            outputLayer[i].setOutput(f(total));
+            outputLayer[i].setTarget(outputLayer[i].getValue().compareTo(output) == 0 ? 1 : 0);
+            outputLayer[i].setError((outputLayer[i].getTarget() - outputLayer[i].getOutput()) * (outputLayer[i].getOutput()) * (1 - outputLayer[i].getOutput()));
         }
     }
 
-    public double GetError()
-    {
+    public double getError() {
         double total = 0.0;
-        for (int j = 0; j < OutputNum; j++)
-        {
-            total += Math.pow((OutputLayer[j].Target - OutputLayer[j].output), 2) / 2;
+        for (int j = 0; j < outputNum; j++) {
+            total += Math.pow((outputLayer[j].getTarget() - outputLayer[j].getOutput()), 2) / 2;
         }
         return total;
     }
 
-    public void InitializeNetwork(Dictionary<String, double[]> TrainingSet)
-    {
+    public void initializeNetwork(Dictionary<String, double[]> trainingSet) {
         int i, j;
         Random rand = new Random();
-        for (i = 0; i < PreInputNum; i++)
-        {
-            PreInputLayer[i].Weights = new double[InputNum];
-            for (j = 0; j < InputNum; j++)
-            {
-                PreInputLayer[i].Weights[j] = 0.01 + ((double)rand.nextInt(8) / 100);
+        for (i = 0; i < preInputNum; i++) {
+            preInputLayer[i].setWeights(new double[inputNum]);
+            for (j = 0; j < inputNum; j++) {
+                double[] weights = preInputLayer[i].getWeights();
+                weights[j] = 0.01 + ((double) rand.nextInt(8) / 100);
+                preInputLayer[i].setWeights(weights);
             }
         }
 
-        for (i = 0; i < InputNum; i++)
-        {
-            InputLayer[i].Weights = new double[HiddenNum];
-            for (j = 0; j < HiddenNum; j++)
-            {
-                InputLayer[i].Weights[j] = 0.01 + ((double)rand.nextInt(8) / 100);
+        for (i = 0; i < inputNum; i++) {
+            inputLayer[i].weights = new double[hiddenNum];
+            for (j = 0; j < hiddenNum; j++) {
+                inputLayer[i].weights[j] = 0.01 + ((double) rand.nextInt(8) / 100);
             }
         }
 
-        for (i = 0; i < HiddenNum; i++)
-        {
-            HiddenLayer[i].Weights = new double[OutputNum];
-            for (j = 0; j < OutputNum; j++)
-            {
-                HiddenLayer[i].Weights[j] = 0.01 + ((double)rand.nextInt(8) / 100);
+        for (i = 0; i < hiddenNum; i++) {
+            hiddenLayer[i].setWeights(new double[outputNum]);
+            for (j = 0; j < outputNum; j++) {
+                hiddenLayer[i].getWeights()[j] = 0.01 + ((double) rand.nextInt(8) / 100);
             }
         }
 
         int k = 0;
 
-        Enumeration<String> enumeration = TrainingSet.keys();
+        Enumeration<String> enumeration = trainingSet.keys();
         while (enumeration.hasMoreElements()) {
-            OutputLayer[k++].Value = enumeration.nextElement();
+            outputLayer[k++].setValue(enumeration.nextElement());
         }
     }
 
-    public void Recognize(double[] Input, String MatchedHigh, double OutputValueHight, String MatchedLow, double OutputValueLow)
-    {
+    public void recognize(double[] input, String matchedHigh, String matchedLow) {
         int i, j;
         double total = 0.0;
         double max = -1;
 
         //Apply input to the network
-        for (i = 0; i < PreInputNum; i++)
-        {
-            PreInputLayer[i].Value = Input[i];
+        for (i = 0; i < preInputNum; i++) {
+            preInputLayer[i].setValue(input[i]);
         }
 
-        //Calculate Input Layer's Inputs and Outputs
-        for (i = 0; i < InputNum; i++)
-        {
+        //Calculate input Layer's Inputs and Outputs
+        for (i = 0; i < inputNum; i++) {
             total = 0.0;
-            for (j = 0; j < PreInputNum; j++)
-            {
-                total += PreInputLayer[j].Value * PreInputLayer[j].Weights[i];
+            for (j = 0; j < preInputNum; j++) {
+                total += preInputLayer[j].getValue() * preInputLayer[j].getWeights()[i];
             }
-            InputLayer[i].InputSum = total;
-            InputLayer[i].Output = F(total);
+            inputLayer[i].inputSum = total;
+            inputLayer[i].output = f(total);
         }
 
         //Calculate Hidden Layer's Inputs and Outputs
-        for (i = 0; i < HiddenNum; i++)
-        {
+        for (i = 0; i < hiddenNum; i++) {
             total = 0.0;
-            for (j = 0; j < InputNum; j++)
-            {
-                total += InputLayer[j].Output * InputLayer[j].Weights[i];
+            for (j = 0; j < inputNum; j++) {
+                total += inputLayer[j].output * inputLayer[j].weights[i];
             }
 
-            HiddenLayer[i].InputSum = total;
-            HiddenLayer[i].Output = F(total);
+            hiddenLayer[i].setInputSum(total);
+            hiddenLayer[i].setOutput(f(total));
         }
 
         //Find the [Two] Highest Outputs
-        for (i = 0; i < OutputNum; i++)
-        {
+        for (i = 0; i < outputNum; i++) {
             total = 0.0;
-            for (j = 0; j < HiddenNum; j++)
-            {
-                total += HiddenLayer[j].Output * HiddenLayer[j].Weights[i];
+            for (j = 0; j < hiddenNum; j++) {
+                total += hiddenLayer[j].getOutput() * hiddenLayer[j].getWeights()[i];
             }
-            OutputLayer[i].InputSum = total;
-            OutputLayer[i].output = F(total);
-            if (OutputLayer[i].output > max)
-            {
-                MatchedLow = MatchedHigh;
-                OutputValueLow = max;
-                max = OutputLayer[i].output;
-                MatchedHigh = OutputLayer[i].Value;
-                OutputValueHight = max;
-
+            outputLayer[i].setInputSum(total);
+            outputLayer[i].setOutput(f(total));
+            if (outputLayer[i].getOutput() > max) {
+                matchedLow = matchedHigh;
+                max = outputLayer[i].getOutput();
+                matchedHigh = outputLayer[i].getValue();
             }
         }
-        System.out.println("Max :" + MatchedHigh);
-        System.out.println("Min :" + MatchedLow + "\n");
+        System.out.println("Max :" + matchedHigh);
+        System.out.println("Min :" + matchedLow + "\n");
     }
-
 }

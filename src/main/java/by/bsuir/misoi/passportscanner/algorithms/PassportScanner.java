@@ -9,8 +9,6 @@ import by.bsuir.misoi.passportscanner.utils.Constants;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Vector;
 
