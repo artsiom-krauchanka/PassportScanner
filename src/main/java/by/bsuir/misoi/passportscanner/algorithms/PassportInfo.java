@@ -10,7 +10,10 @@ public class PassportInfo {
     private static final int DELTA = 5;
     private static final int MACHINE_READABLE_LINE_LENGTH = 44;
     private final List<ContentLine> lines;
+
+
     private int letterHeight;
+
     private ContentLine machineReadableLineSecond;
     private ContentLine machineReadableLineFirst;
     private ContentLine name;
@@ -50,6 +53,22 @@ public class PassportInfo {
 
     public ContentLine getMachineReadableLineFirst() {
         return machineReadableLineFirst;
+    }
+
+    public ContentLine getName() {
+        return name;
+    }
+
+    public ContentLine getSurname() {
+        return surname;
+    }
+
+    public ContentLine getId() {
+        return id;
+    }
+
+    public ContentLine getPassportNumber() {
+        return passportNumber;
     }
 
     public List<ContentLine> getLines() {

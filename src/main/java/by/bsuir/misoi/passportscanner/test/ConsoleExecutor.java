@@ -1,6 +1,7 @@
 package by.bsuir.misoi.passportscanner.test;
 
 import by.bsuir.misoi.passportscanner.algorithms.ContentAnalyzer;
+import by.bsuir.misoi.passportscanner.algorithms.PassportAnalyzer;
 import by.bsuir.misoi.passportscanner.algorithms.PassportInfo;
 import by.bsuir.misoi.passportscanner.draw.Content;
 import by.bsuir.misoi.passportscanner.draw.ContentLine;
@@ -8,6 +9,8 @@ import by.bsuir.misoi.passportscanner.filters.BinaryFilter;
 import by.bsuir.misoi.passportscanner.filters.Filter;
 import by.bsuir.misoi.passportscanner.filters.MedianFilter;
 import by.bsuir.misoi.passportscanner.perceptron.Perceptron;
+import by.bsuir.misoi.passportscanner.text.PassportData;
+import by.bsuir.misoi.passportscanner.text.TextLine;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 import org.apache.commons.io.FileUtils;
 
@@ -34,8 +37,8 @@ public class ConsoleExecutor {
     final static String outPath = "E:/img/exa/res/";
 
     public static void main(String[] args) throws Throwable {
-        Perceptron perceptron = new Perceptron();
-        for( int i = 1; i <= 1; i++) {
+        Perceptron perceptron = null ; //new Perceptron();
+        for( int i = 1; i <= 3; i++) {
             File folder = new File(outPath + i + "/");
             if (folder.exists())
                 FileUtils.deleteDirectory(folder);
@@ -60,15 +63,17 @@ public class ConsoleExecutor {
 
             final List<ContentLine> lines = ContentAnalyzer.getContentLines(width, height, pixels);
 
+//            PassportAnalyzer analyzer = new PassportAnalyzer(sourceImage, perceptron, lines);
+
             PassportInfo info = new PassportInfo(lines);
             for (int j = 0; j < info.getLines().size(); j++) {
                 File lineFolder = new File(outPath + i + "/" + j + "/");
                 lineFolder.mkdir();
-
+                TextLine line = new TextLine();
                 for (Content content : info.getLines().get(j).getLine()) {
                     BufferedImage result = ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
 
-                    perceptron.recognize(result);
+//                    line.add(perceptron.recognize(result));
 
                     ImageHelper.saveImage(result, lineFolder.getPath() + "/" + i + ".bmp");
                 }

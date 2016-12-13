@@ -1,5 +1,6 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
+import by.bsuir.misoi.passportscanner.text.Letter;
 import by.bsuir.misoi.passportscanner.perceptron.struct.NeuralEventArgs;
 
 import java.util.Dictionary;
@@ -57,8 +58,8 @@ public class NeuralNetwork {
 
     }
 
-    public void recognize(double[] input, String matchedHigh, String matchedLow) {
-        neuralNet.recognize(input, matchedHigh, matchedLow);
+    public Letter recognize(double[] input, String matchedHigh, String matchedLow) {
+        return neuralNet.recognize(input, matchedHigh, matchedLow);
     }
 
 //    public void SaveNetwork(String path)

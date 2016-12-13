@@ -8,8 +8,6 @@ import java.util.List;
 
 public class ContentLine {
 
-    private static final Comparator<Content> contentComparator = (o1, o2) -> Integer.compare(o1.x, o2.x);
-
     private List<Content> line = new ArrayList<>();
 
     private int maxY;
@@ -41,7 +39,21 @@ public class ContentLine {
     }
 
     public List<Content> getLine () {
-        Collections.sort(line, contentComparator);
+        Collections.sort(line, (o1, o2) -> Integer.compare(o1.x, o2.x));
+        int lineWidth = line.get(line.size() - 1).x + line.get(line.size() - 1).width - line.get(0).x;
+        int realWidth = 0;
+        for (Content c : line)
+            realWidth += c.width;
+
+        int space = (lineWidth - realWidth) / line.size();
+
+        for (Content c : line) {
+            c.x -= space;
+            c.y -= space;
+            c.height += 2 * space;
+            c.width += 2 * space;
+        }
+
         return line;
     }
 

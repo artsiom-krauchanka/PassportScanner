@@ -1,5 +1,6 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
+import by.bsuir.misoi.passportscanner.text.Letter;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 import org.apache.commons.io.FilenameUtils;
 
@@ -74,8 +75,8 @@ public class Perceptron {
     }
 
 
-    public void recognize(BufferedImage image) {
+    public Letter recognize(BufferedImage image) {
         double[] input = ImageProcessing.toMatrix(image, avImageHeight, avImageWidth);
-        neuralNetwork.recognize(input, "?", "?");
+        return neuralNetwork.recognize(input, "?", "?");
     }
 }
