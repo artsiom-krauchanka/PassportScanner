@@ -32,11 +32,16 @@ public class PassportAnalyzer {
     private PassportData data;
 
     private void analyze() throws Exception {
-        info = new PassportInfo(lines);
+        info = new PassportInfo(sourceImage.getWidth(), sourceImage.getHeight(), lines);
         data = new PassportData();
 
-        data.setMachineReadableLineSecond(transform(info.getMachineReadableLineSecond(), "machine second"));
-        data.setMachineReadableLineFirst(transform(info.getMachineReadableLineFirst(), "machine first"));
+        data.setMachineReadableLineSecond(transform(info.getMachineReadableLineSecond(), "line2"));
+        data.setMachineReadableLineFirst(transform(info.getMachineReadableLineFirst(), "line1"));
+        data.setId(transform(info.getId(), "id"));
+        data.setBirthday(transform(info.getBirthday(), "birthday"));
+        data.setName(transform(info.getName(), "name"));
+        data.setSurname(transform(info.getSurname(), "surname"));
+        data.setPassportNumber(transform(info.getPassportNumber(), "number"));
 
 
         System.out.println(data.toString());
@@ -51,7 +56,7 @@ public class PassportAnalyzer {
 
             line.add(perceptron.recognize(result));
 
-            ImageHelper.saveImage(result, lineFolder.getPath() + "/" + id + ".bmp");
+//            ImageHelper.saveImage(result, lineFolder.getPath() + "/" + id + ".bmp");
         }
         return line;
     }

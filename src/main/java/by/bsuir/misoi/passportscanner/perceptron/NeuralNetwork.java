@@ -10,8 +10,8 @@ public class NeuralNetwork {
 
     private Dictionary<String, double[]> trainingSet;
     private Layer neuralNet;
-    private double maximumError = 1.0;
-    private int maximumIteration = 1000000;
+    private double maximumError = 0.000001;
+    private int maximumIteration = 100000000;
 
     public NeuralNetwork(Layer iBackPro, Dictionary<String, double[]> trainingSet) {
         neuralNet = iBackPro;

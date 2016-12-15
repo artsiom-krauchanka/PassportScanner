@@ -31,14 +31,12 @@ public class ConsoleExecutor {
         filters.add(new BinaryFilter());
     }
 
-    final static String fileName = "1.jpg";
-
     final static String inPath = "E:/img/exa/";
     final static String outPath = "E:/img/exa/res/";
 
     public static void main(String[] args) throws Throwable {
-        Perceptron perceptron = null ; //new Perceptron();
-        for( int i = 1; i <= 3; i++) {
+        Perceptron perceptron = new Perceptron();
+        for( int i = 1; i <= 2; i++) {
             File folder = new File(outPath + i + "/");
             if (folder.exists())
                 FileUtils.deleteDirectory(folder);
@@ -63,42 +61,53 @@ public class ConsoleExecutor {
 
             final List<ContentLine> lines = ContentAnalyzer.getContentLines(width, height, pixels);
 
-//            PassportAnalyzer analyzer = new PassportAnalyzer(sourceImage, perceptron, lines);
-
-            PassportInfo info = new PassportInfo(lines);
-            for (int j = 0; j < info.getLines().size(); j++) {
-                File lineFolder = new File(outPath + i + "/" + j + "/");
-                lineFolder.mkdir();
-                TextLine line = new TextLine();
-                for (Content content : info.getLines().get(j).getLine()) {
-                    BufferedImage result = ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
-
-//                    line.add(perceptron.recognize(result));
-
-                    ImageHelper.saveImage(result, lineFolder.getPath() + "/" + i + ".bmp");
-                }
-                System.out.println("---------------------------------------");
-            }
-
-
-
+            PassportAnalyzer analyzer = new PassportAnalyzer(sourceImage, perceptron, lines);
 
 //            for (int j = 0; j < lines.size(); j++) {
 //                File lineFolder = new File(outPath + i + "/" + j + "/");
 //                lineFolder.mkdir();
 //
-//                for (Content content : lines.get(j).getLine()) {
+//                List<Content> line = lines.get(j).getLine();
+//                System.out.println("Line size: " + line.size());
+//                for (Content content : line) {
 //                    BufferedImage result = ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
 //
 //
-//                    ImageHelper.saveImage(result, lineFolder.getPath() + "/" + i + ".bmp");
+//                    ImageHelper.saveImage(result, lineFolder.getPath() + "/start" + i + ".bmp");
 //                }
 //            }
+
+//            PassportInfo info = new PassportInfo(width, height, lines);
+//            for (int j = 0; j < info.getLines().size(); j++) {
+//                File lineFolder = new File(outPath + i + "/" + j + "/");
+//                lineFolder.mkdir();
+//                TextLine line = new TextLine();
+//                int lineNum = 0;
+//                for (Content content : info.getLines().get(j).getLine()) {
+////                    System.out.println(lineNum++);
+//                    BufferedImage result = ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
+//                    ImageHelper.saveImage(result, lineFolder.getPath() + "/" + i + ".bmp");
+//                }
+//                System.out.println("---------------------------------------");
+//            }
+
+
+
+
+
 
 
             System.out.println();
         }
 
+    }
+    private static void printLine (List<Content> line, BufferedImage sourceImage, File lineFolder) throws Exception {
+        for (Content content : line) {
+            BufferedImage result = ImageHelper.getSubImage(sourceImage, content.x, content.y, content.width, content.height);
+
+
+            ImageHelper.saveImage(result, lineFolder.getPath() + "/testPrint.bmp");
+        }
     }
 
 
