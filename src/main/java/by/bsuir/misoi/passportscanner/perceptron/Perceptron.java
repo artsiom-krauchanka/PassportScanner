@@ -1,5 +1,6 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
+import by.bsuir.misoi.passportscanner.text.Letter;
 import by.bsuir.misoi.passportscanner.utils.ImageHelper;
 import org.apache.commons.io.FilenameUtils;
 
@@ -11,7 +12,7 @@ import java.util.Hashtable;
 
 public class Perceptron {
 
-    private final static File TRANING_DIR = new File("E:/img/x/");
+    private final static File TRANING_DIR = new File("E:/img/big/");
     //Neural Network Object With output Type String
     private NeuralNetwork neuralNetwork;
     //Data Members Required For Neural Network
@@ -69,13 +70,13 @@ public class Perceptron {
         }
 
         neuralNetwork = new NeuralNetwork(new Layer(avImageHeight * avImageWidth, inputNum, hiddenNum, numOfPatterns), trainingSet);
-        neuralNetwork.setMaximumError(0.02);
+//        neuralNetwork.setMaximumError(0.02);
         neuralNetwork.train();
     }
 
 
-    public void recognize(BufferedImage image) {
+    public Letter recognize(BufferedImage image) {
         double[] input = ImageProcessing.toMatrix(image, avImageHeight, avImageWidth);
-        neuralNetwork.recognize(input, "?", "?");
+        return neuralNetwork.recognize(input, "?", "?");
     }
 }

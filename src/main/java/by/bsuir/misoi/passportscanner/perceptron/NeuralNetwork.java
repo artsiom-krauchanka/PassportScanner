@@ -1,5 +1,6 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
+import by.bsuir.misoi.passportscanner.text.Letter;
 import by.bsuir.misoi.passportscanner.perceptron.struct.NeuralEventArgs;
 
 import java.util.Dictionary;
@@ -9,8 +10,8 @@ public class NeuralNetwork {
 
     private Dictionary<String, double[]> trainingSet;
     private Layer neuralNet;
-    private double maximumError = 1.0;
-    private int maximumIteration = 1000000;
+    private double maximumError = 0.000001;
+    private int maximumIteration = 100000000;
 
     public NeuralNetwork(Layer iBackPro, Dictionary<String, double[]> trainingSet) {
         neuralNet = iBackPro;
@@ -57,8 +58,8 @@ public class NeuralNetwork {
 
     }
 
-    public void recognize(double[] input, String matchedHigh, String matchedLow) {
-        neuralNet.recognize(input, matchedHigh, matchedLow);
+    public Letter recognize(double[] input, String matchedHigh, String matchedLow) {
+        return neuralNet.recognize(input, matchedHigh, matchedLow);
     }
 
 //    public void SaveNetwork(String path)

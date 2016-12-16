@@ -1,9 +1,7 @@
 package by.bsuir.misoi.passportscanner.perceptron;
 
-import by.bsuir.misoi.passportscanner.perceptron.struct.Hidden;
-import by.bsuir.misoi.passportscanner.perceptron.struct.Input;
-import by.bsuir.misoi.passportscanner.perceptron.struct.Output;
-import by.bsuir.misoi.passportscanner.perceptron.struct.PreInput;
+import by.bsuir.misoi.passportscanner.perceptron.struct.*;
+import by.bsuir.misoi.passportscanner.text.Letter;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -196,7 +194,7 @@ public class Layer {
         }
     }
 
-    public void recognize(double[] input, String matchedHigh, String matchedLow) {
+    public Letter recognize(double[] input, String matchedHigh, String matchedLow) {
         int i, j;
         double total = 0.0;
         double max = -1;
@@ -241,7 +239,8 @@ public class Layer {
                 matchedHigh = outputLayer[i].getValue();
             }
         }
-        System.out.println("Max :" + matchedHigh);
-        System.out.println("Min :" + matchedLow + "\n");
+//        System.out.println("Max :" + matchedHigh);
+//        System.out.println("Min :" + matchedLow + "\n");
+        return new Letter(matchedHigh, matchedLow);
     }
 }

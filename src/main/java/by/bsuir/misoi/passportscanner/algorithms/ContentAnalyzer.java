@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class ContentAnalyzer {
 
-    private static final int SMALL_GROUP_LIMIT = 30;
-    private static final int SPAM_LINE_CONTENT = 5;
+    private static final int SMALL_GROUP_LIMIT = 39;
+    private static final int SPAM_LINE_CONTENT = 4;
 
     public static List<ContentLine> getContentLines(int width, int height, int[] pixels) throws Exception {
         final GroupFinder finder = new GroupFinder(width, height, pixels);
